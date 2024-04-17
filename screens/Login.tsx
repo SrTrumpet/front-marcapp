@@ -1,15 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from "react";
-import { TextInput, Text, View, TouchableOpacity } from "react-native";
+import { TextInput, Text, View } from "react-native";
 import styles from './../components/style/styles';
 import ButtonGradient from './../ButtonGradient';
 
 
-
-
 const Login = ({navigation}) =>{
-
-
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,26 +22,30 @@ const Login = ({navigation}) =>{
             <Text style = {styles.subTitle}>Inicia sesion en tu cuenta</Text>
 
             <TextInput style = {styles.textInput}
-            placeholder='jhon@gmail.com'
-            onChangeText={setEmail}
-            value={email}
+                placeholder='jhon@gmail.com'
+                onChangeText={setEmail}
+                value={email}
             />
 
             <TextInput 
-            style = {styles.textInput}
-            placeholder='Contraseña'
-            secureTextEntry = {true}
-            onChangeText={setPassword}
-            value={password}
+                style = {styles.textInput}
+                placeholder='Contraseña'
+                secureTextEntry = {true}
+                onChangeText={setPassword}
+                value={password}
             />
 
-            <Text style={styles.textNavegaation}>Olvidé mi contraseña. 
-                <TouchableOpacity onPress={() => navigation.navigate('ForgotPass')}>
-                <Text style={styles.linkText}>Recuperar</Text>
-                </TouchableOpacity>
+            <Text style={styles.containerOlvido}>Olvidé mi contraseña. 
+                <Text style={styles.linkText} onPress={() => navigation.navigate('ForgotPass')}> Recuperar
+                </Text>
             </Text>
             
             <ButtonGradient  onPress={handleLogin}/>
+
+            <Text style={styles.containerOlvido}>No tengo cuenta. 
+                <Text style={styles.linkText} onPress={() => navigation.navigate('Register')}> Registrate
+                </Text>
+            </Text>
 
             <StatusBar style="auto" />
     </View>

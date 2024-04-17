@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { idText } from "typescript";
 
 
 const styles = StyleSheet.create({
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     },
 
     containerButton: {
-        marginTop: 100
+        marginTop: 80
     },
 
     buttonSession: {
@@ -52,8 +53,27 @@ const styles = StyleSheet.create({
 
     linkText:{
         padding: 10,
-        color: 'blue'
+        color: 'blue',
+        marginTop: 40
     },
+
+    textForgotPass:{
+        fontSize: 20,
+        color: 'black',
+        fontWeight: 'bold'
+    },
+
+    containerOlvido: {
+        marginTop: 20
+    },
+
+    textoRegister:{
+        marginTop: 10
+    },
+
+    containerButtonRegister: {
+        marginTop: 20
+    }
 });
 
 export default styles;
