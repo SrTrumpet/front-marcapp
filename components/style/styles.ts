@@ -29,6 +29,31 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         backgroundColor: '#fff'
     },
+
+    text: {
+        color : "#fff",
+    },
+
+    containerButton: {
+        marginTop: 100
+    },
+
+    buttonSession: {
+        width: '90%',
+        height: 50,
+        borderRadius: 30,
+        padding:13
+    },
+
+    textNavegaation:{
+        top:20,
+        color : 'black'
+    },
+
+    linkText:{
+        padding: 10,
+        color: 'blue'
+    },
 });
 
 export default styles;

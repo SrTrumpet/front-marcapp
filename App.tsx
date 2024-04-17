@@ -1,24 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import {Text, View, TextInput} from 'react-native';
-import styles from './components/style/styles';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from './screens/Login';
+import ForgotPass from './screens/ForgotPass'; 
+import Register from './screens/Register';
 
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style = {styles.container}>
-      <Text style = {styles.titulo}>Hola </Text>
-      <Text style = {styles.subTitle}>Inicia sesion en tu cuenta</Text>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component = {Login}/>
+        <Stack.Screen name="ForgotPass" component={ForgotPass}/>
+        <Stack.Screen name="Register" component={Register}/>
+      </Stack.Navigator>
 
-      <TextInput style = {styles.textInput}
-        placeholder='jhon@gmail.com'
-      />
-
-      <TextInput style = {styles.textInput}
-        placeholder='Contraseña'
-      />
-      <StatusBar style="auto" />
-    </View>
+    </NavigationContainer>
+      
   );
 }
 
