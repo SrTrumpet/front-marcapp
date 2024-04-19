@@ -16,7 +16,7 @@ const Login = ({navigation}) =>{
 
     const handleLogin = async() => {
         // Mostrar los datos en la consola
-        try{const response = await axios.post('http://192.168.133.101:3000/api/v1/auth/login',
+        try{const response = await axios.post('http://192.168.133.26:3000/api/v1/auth/login',
             {
                 email:email,
                 password:password
