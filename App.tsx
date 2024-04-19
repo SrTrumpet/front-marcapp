@@ -4,7 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './screens/Login';
 import ForgotPass from './screens/ForgotPass'; 
 import Register from './screens/Register';
+import Home from './screens/Home';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +24,7 @@ export default function App() {
         <Stack.Screen name="Login" component = {Login}/>
         <Stack.Screen name="ForgotPass" component={ForgotPass}/>
         <Stack.Screen name="Register" component={Register}/>
+        <Stack.Screen name="Home" component={Home}/>
       </Stack.Navigator>
     </NavigationContainer>
     </ApolloProvider>

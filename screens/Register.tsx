@@ -3,6 +3,7 @@ import { TextInput, Text, View, ScrollView} from "react-native";
 import styles from './../components/style/styles';
 import ButtonRegister from '../components/button/ButtonRegister';
 import DateInput from '../components/button/DateInput';
+import axios from 'axios';
 
 
 
