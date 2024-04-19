@@ -4,6 +4,7 @@ import { TextInput, Text, View, Alert } from "react-native";
 import styles from './../components/style/styles';
 import ButtonGradient from './../ButtonGradient';
 import axios from 'axios';
+import Home from '../screens/Home';
 
 
 const Login = ({navigation}) =>{
@@ -24,6 +25,7 @@ const Login = ({navigation}) =>{
             setTocken(response.data.tocken);
             console.log("Datos ingresados:", { email, password });
             console.log("Datos del tocken: ",response.data.tocken);
+            
 
         } catch (error){
             if (error.response){

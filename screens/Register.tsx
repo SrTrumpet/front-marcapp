@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { TextInput, Text, View, ScrollView} from "react-native";
+import { TextInput, Text, View, ScrollView, Alert} from "react-native";
 import styles from './../components/style/styles';
 import ButtonRegister from '../components/button/ButtonRegister';
 import DateInput from '../components/button/DateInput';
@@ -18,7 +18,40 @@ const Register = () =>{
     const [contrasenna, setContrasenna] = useState('');
     const [verficaContrasenna, setVerificaContrasenna] = useState('');
 
-    const handleRegister = () =>{
+    const handleRegister = async() =>{
+
+        try{const response = await axios.post('http://192.168.133.101:3000/api/v1/auth/register',
+        {
+            name:nombre,
+            apellidos: apellidos,
+            nacimiento: fechaNacimiento,
+            email:email,
+            password:contrasenna
+        });
+
+            if(contrasenna == verficaContrasenna){
+                Alert.alert("Usuario Creado")
+                console.log("Datos ingresados:", {nombre, apellidos, email, fechaNacimiento,contrasenna});
+                console.log("Datos del tocken: ",response.data.tocken);
+            }
+            
+        }catch(error){
+            if (error.response){
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+                Alert.alert("Fallo de Login", error.response.data.message);
+            }else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+                Alert.alert("Fallo de Login", "No hay respuesta del servidor");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                Alert.alert("Login Failed", error.message);
+            }
+        }
+
         console.log("Datos ingresados:", {nombre, apellidos,fechaNacimiento, email, contrasenna, verficaContrasenna });
     }
 
