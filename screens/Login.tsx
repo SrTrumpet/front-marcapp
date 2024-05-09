@@ -6,6 +6,11 @@ import ButtonGradient from './../ButtonGradient';
 import axios from 'axios';
 import Home from '../screens/Home';
 
+//Mutaciones y Queries
+import { INICIO_SESION } from '../graphql/queries/auth';
+import { LOGIN_MUTATION } from '../graphql/mutations/auth/login';
+import { useQuery, useMutation} from '@apollo/client';
+
 
 const Login = ({navigation}) =>{
 
@@ -13,8 +18,32 @@ const Login = ({navigation}) =>{
     const [password, setPassword] = useState('');
     const [tocken, setTocken] = useState('');
 
+    const [login ,{loading, error, data}] = useMutation(LOGIN_MUTATION);
+
 
     const handleLogin = async() => {
+
+
+        if (loading) return "Loading...";
+        if (error) return `Error! ${error.message}`;
+
+        try {
+            const result = await login({
+                variables: {
+                    email: email,
+                    password: password
+                }
+            });
+            console.log('Login success:', result.data.login.token);
+            // Aquí podrías almacenar el token en localStorage y redirigir al usuario
+            localStorage.setItem('token', result.data.login.token);
+        } catch (e){
+            console.error('Login error:', e);
+        }
+
+
+
+        /*
         // Mostrar los datos en la consola
         try{const response = await axios.post('http://192.168.133.26:3000/api/v1/auth/login',
             {
@@ -43,6 +72,7 @@ const Login = ({navigation}) =>{
                 Alert.alert("Login Failed", error.message);
             }
         }
+        */
     };
 
 

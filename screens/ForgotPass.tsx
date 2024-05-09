@@ -12,6 +12,9 @@ const ForgotPass = () =>{
 
     const handleReset = async() => {
 
+
+        
+
         try{const response = await axios.post('http://192.168.133.26:3000/api/v1/auth/forgotpass',
             {
                 email:email,
