@@ -1,32 +1,26 @@
+import React, {useState} from "react";
+import { TextInput, Text, View } from "react-native";
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect} from "react";
-import { TextInput, Text, View, Alert } from "react-native";
 import styles from './../components/style/styles';
 import ButtonGradient from './../ButtonGradient';
-import axios from 'axios';
+
 import Home from '../screens/Home';
 
+//import axios from 'axios';
+
 //Mutaciones y Queries
-import { INICIO_SESION } from '../graphql/queries/auth';
-import { LOGIN_MUTATION } from '../graphql/mutations/auth/login';
-import { useQuery, useMutation} from '@apollo/client';
+import { INICIO_SESION } from '../graphql/mutations/auth';
+import { useMutation} from '@apollo/client';
 
 
 const Login = ({navigation}) =>{
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [tocken, setTocken] = useState('');
 
-    const [login ,{loading, error, data}] = useMutation(LOGIN_MUTATION);
-
+    const [login ,{loading, error}] = useMutation(INICIO_SESION);
 
     const handleLogin = async() => {
-
-
-        if (loading) return "Loading...";
-        if (error) return `Error! ${error.message}`;
-
         try {
             const result = await login({
                 variables: {
@@ -34,9 +28,9 @@ const Login = ({navigation}) =>{
                     password: password
                 }
             });
-            console.log('Login success:', result.data.login.token);
-            // Aquí podrías almacenar el token en localStorage y redirigir al usuario
-            localStorage.setItem('token', result.data.login.token);
+
+            console.log('Login success:', result.data.login.tocken);
+        
         } catch (e){
             console.error('Login error:', e);
         }
@@ -75,6 +69,9 @@ const Login = ({navigation}) =>{
         */
     };
 
+    if (loading) return "Loading...";
+
+    if (error) return `Error! ${error.message}`;
 
     return(
         <View style = {styles.container}>

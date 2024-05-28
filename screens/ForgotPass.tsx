@@ -4,16 +4,20 @@ import { TextInput, Text, View, Alert} from "react-native";
 import styles from './../components/style/styles';
 import ButtonForgot from '../components/button/ButtonForgot'
 import axios from 'axios';
+import { FORGOT_PASS } from "../graphql/mutations/auth/index";
+import { useMutation } from "@apollo/client";
 
 
 const ForgotPass = () =>{
 
+    const [forgot,{loading,error}] = useMutation(FORGOT_PASS);
     const [email, setEmail] = useState('');
 
+    //const [forgotPass,{loading,error}] = useMutation{FORGOT_PASS};
+
+    
+
     const handleReset = async() => {
-
-
-        
 
         try{const response = await axios.post('http://192.168.133.26:3000/api/v1/auth/forgotpass',
             {
@@ -44,6 +48,7 @@ const ForgotPass = () =>{
         }
     };
 
+    if(loading)return "Loading";
 
     return(
         <View style = {styles.container}>
