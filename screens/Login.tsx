@@ -29,7 +29,7 @@ const Login = ({navigation}) =>{
                 }
             });
 
-            console.log('Login success:', result.data.login.tocken);
+            console.log('Login success:', result.data.login.token);
         
         } catch (e){
             console.error('Login error:', e);

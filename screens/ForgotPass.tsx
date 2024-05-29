@@ -10,7 +10,7 @@ import { useMutation } from "@apollo/client";
 
 const ForgotPass = () =>{
 
-    const [forgot,{loading,error}] = useMutation(FORGOT_PASS);
+    const [forgotPass,{loading,error}] = useMutation(FORGOT_PASS);
     const [email, setEmail] = useState('');
 
     //const [forgotPass,{loading,error}] = useMutation{FORGOT_PASS};
@@ -19,6 +19,22 @@ const ForgotPass = () =>{
 
     const handleReset = async() => {
 
+        try{
+            const result = await forgotPass({
+                variables:{
+                    email:email,
+                }
+            });
+        }catch(e){
+
+        }
+
+
+
+
+
+
+        /*
         try{const response = await axios.post('http://192.168.133.26:3000/api/v1/auth/forgotpass',
             {
                 email:email,
@@ -45,7 +61,7 @@ const ForgotPass = () =>{
                 Alert.alert("Login Failed", error.message);
             }
 
-        }
+        }*/
     };
 
     if(loading)return "Loading";
