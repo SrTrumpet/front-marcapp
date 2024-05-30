@@ -6,65 +6,51 @@ import ButtonForgot from '../components/button/ButtonForgot'
 import axios from 'axios';
 import { FORGOT_PASS } from "../graphql/mutations/auth/index";
 import { useMutation } from "@apollo/client";
-
+import Loading from "./Loading";
 
 const ForgotPass = () =>{
 
     const [forgot,{loading,error}] = useMutation(FORGOT_PASS);
     const [email, setEmail] = useState('');
 
-    //const [forgotPass,{loading,error}] = useMutation{FORGOT_PASS};
-
-    
-
-    const handleReset = async() => {
-
-        console.log("ASDASAD");
+    const handleReset = async () => {
         try {
             const result = await forgot({
                 variables: {
                     email: email
                 }
             });
-
-            console.log('Login success:', result.data.forgot.message);
-        
-        } catch (e){
-            console.error('Login error:', e);
-        }
-
-
-        /*
-        try{const response = await axios.post('http://192.168.133.26:3000/api/v1/auth/forgotpass',
-            {
-                email:email,
-            });
-        
-            console.log("Datos ingresados:", { email });
-            Alert.alert(response.data.message);
-
-        }
-        catch (error){
-
-            if (error.response){
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-                Alert.alert("Fallo de Login", error.response.data.message);
-            }else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-                Alert.alert("Fallo de Login", "No hay respuesta del servidor");
+            if (result.data.forgotPass) {
+                console.log('ForgotPass Success:', result.data.forgotPass.message);
+                Alert.alert("Exito!", "Su nueva contraseña se envió a su correo");
             } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-                Alert.alert("Login Failed", error.message);
+                // Si no hay errores de GraphQL, pero tampoco datos como esperábamos
+                throw new Error("No data received");
             }
-
-        }*/
+        } catch (e) {
+            console.error('ForgotPass Error:', e);
+            if (error) {
+                // Error de GraphQL o error de red
+                if (error.graphQLErrors.length > 0) {
+                    // Errores de GraphQL enviados desde el servidor
+                    const messages = error.graphQLErrors.map(err => err.message).join(', ');
+                    Alert.alert("Error de GraphQL", messages);
+                } else if (error.networkError) {
+                    // Error de red, como un problema de conexión
+                    Alert.alert("Error de red", error.networkError.message || "Problemas de conexión");
+                } else {
+                    // Otros tipos de errores no específicamente de red o GraphQL
+                    Alert.alert("Error", error.message);
+                }
+            } else {
+                // Error capturado en el try-catch que no es específico de GraphQL
+                Alert.alert("Error", e.message);
+            }
+        }
     };
+    
 
-    if(loading)return <Text>Loading...</Text>;
+    if(loading)return <Loading/>;
 
     return(
         <View style = {styles.container}>
