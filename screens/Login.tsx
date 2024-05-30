@@ -3,6 +3,7 @@ import { TextInput, Text, View } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import styles from './../components/style/styles';
 import ButtonGradient from './../ButtonGradient';
+import Loading from "./Loading";
 
 import Home from '../screens/Home';
 
@@ -21,6 +22,7 @@ const Login = ({navigation}) =>{
     const [login ,{loading, error}] = useMutation(INICIO_SESION);
 
     const handleLogin = async() => {
+        console.log("ASDASAD");
         try {
             const result = await login({
                 variables: {
@@ -29,7 +31,7 @@ const Login = ({navigation}) =>{
                 }
             });
 
-            console.log('Login success:', result.data.login.token);
+            console.log('Login success:', result.data.login.tocken);
         
         } catch (e){
             console.error('Login error:', e);
@@ -69,9 +71,9 @@ const Login = ({navigation}) =>{
         */
     };
 
-    if (loading) return "Loading...";
-
-    if (error) return `Error! ${error.message}`;
+    if (loading) return <Text>Loading...</Text>;
+    if (error) return <Text>Error! {error.message}</Text>;
+    
 
     return(
         <View style = {styles.container}>

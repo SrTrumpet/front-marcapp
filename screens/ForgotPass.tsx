@@ -10,7 +10,7 @@ import { useMutation } from "@apollo/client";
 
 const ForgotPass = () =>{
 
-    const [forgotPass,{loading,error}] = useMutation(FORGOT_PASS);
+    const [forgot,{loading,error}] = useMutation(FORGOT_PASS);
     const [email, setEmail] = useState('');
 
     //const [forgotPass,{loading,error}] = useMutation{FORGOT_PASS};
@@ -19,19 +19,19 @@ const ForgotPass = () =>{
 
     const handleReset = async() => {
 
-        try{
-            const result = await forgotPass({
-                variables:{
-                    email:email,
+        console.log("ASDASAD");
+        try {
+            const result = await forgot({
+                variables: {
+                    email: email
                 }
             });
-        }catch(e){
 
+            console.log('Login success:', result.data.forgot.message);
+        
+        } catch (e){
+            console.error('Login error:', e);
         }
-
-
-
-
 
 
         /*
@@ -64,7 +64,7 @@ const ForgotPass = () =>{
         }*/
     };
 
-    if(loading)return "Loading";
+    if(loading)return <Text>Loading...</Text>;
 
     return(
         <View style = {styles.container}>
