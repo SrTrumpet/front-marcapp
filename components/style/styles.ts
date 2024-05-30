@@ -39,6 +39,20 @@ const styles = StyleSheet.create({
         marginTop: 80
     },
 
+    containerButtonMarcaje:{
+        marginTop: 20
+    },
+
+    contenedorBotonesMarcaje: {
+        
+        top:350,
+        padding: 20, // Agrega un poco de espacio alrededor
+    },
+
+    containerButtonSesion:{
+        marginTop: 80
+    },
+
     buttonSession: {
         width: '90%',
         height: 50,
@@ -73,6 +87,15 @@ const styles = StyleSheet.create({
 
     containerButtonRegister: {
         marginTop: 20
+    },
+
+    buttonMarcarEntrada:{
+        height: 50,
+        borderRadius: 30,
+        width:'80%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
     }
 });
 

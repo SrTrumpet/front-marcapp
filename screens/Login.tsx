@@ -6,10 +6,6 @@ import ButtonGradient from './../ButtonGradient';
 import Loading from "./Loading";
 import * as SecureStore from 'expo-secure-store';
 
-import Home from '../screens/Home';
-
-//import axios from 'axios';
-
 //Mutaciones y Queries
 import { INICIO_SESION } from '../graphql/mutations/auth';
 import { useMutation} from '@apollo/client';
@@ -49,7 +45,7 @@ const Login = ({navigation}) =>{
         }
     };
 
-    if (loading) return <Text>Loading...</Text>;
+    if (loading) return <Loading/>;
     if (error) return <Text>Error! {error.message}</Text>;
     
 

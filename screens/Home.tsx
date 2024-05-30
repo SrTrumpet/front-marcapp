@@ -1,13 +1,47 @@
-import { View, Text } from "react-native";
+import { View, Text, Button} from "react-native";
+
+//Botones de la pagina
+import ButtonGradient from "../ButtonGradient";
+import ButtonMarcarEntrada from "../components/button/ButtonMarcarEntrada";
+import ButtonMarcarSalida from "../components/button/ButtonMarcarSalida";
+import ButtonCerrarSesion from "../components/button/ButtonCerrarSesion";
+
+//Estilos
+import styles from "../components/style/styles";
 
 const Home = ({navigation}) =>{
 
+    const handleMarcarEntrada = () =>{
+        console.log("Boton entrada")
+    }
+
+    const handleMarcarSalida = () =>{
+        console.log("Boton Salida")
+    }
+
+    const handleCerrarSesion =() =>{
+        console.log("Cerrar Sesion")
+    }
 
     return(
         <View>
-            <Text>
-                Wenas Socio
-            </Text>
+            
+            <View>
+                <View>
+                    <Text>Wenas Socio</Text>
+                </View>
+
+                <View>
+                    <Text>Hola</Text>
+                </View>
+            </View>
+
+            <View style={styles.contenedorBotonesMarcaje}>
+                <ButtonMarcarEntrada onPress={handleMarcarEntrada}/>
+                <ButtonMarcarSalida onPress={handleMarcarSalida}/>
+                <ButtonCerrarSesion onPress={handleCerrarSesion}/>
+            </View>
+
         </View>
     )
 }
