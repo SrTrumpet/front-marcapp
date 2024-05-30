@@ -3,13 +3,12 @@ import { TextInput, Text, View, ScrollView, Alert} from "react-native";
 import styles from './../components/style/styles';
 import ButtonRegister from '../components/button/ButtonRegister';
 import DateInput from '../components/button/DateInput';
-import axios from 'axios';
+//import axios from 'axios';
+import { useMutation } from "@apollo/client";
+import { REGISTER } from "../graphql/mutations/auth";
+import Loading from "./Loading";
 
-
-
-
-
-const Register = () =>{
+const Register = ({navigation}) =>{
 
     const [nombre, setNombre]  = useState('');
     const [apellidos, setApellidos] = useState('');
@@ -18,39 +17,43 @@ const Register = () =>{
     const [contrasenna, setContrasenna] = useState('');
     const [verficaContrasenna, setVerificaContrasenna] = useState('');
 
+    const [registerResponse,{loading,error}] = useMutation(REGISTER);
+
     const handleRegister = async () => {
-        if (!nombre.trim() || !apellidos.trim() || !email.trim() || !contrasenna.trim() || !verficaContrasenna.trim()) {
-            Alert.alert("Error", "Todos los campos son obligatorios.");
-            return;
-        }
-    
-        if (contrasenna !== verficaContrasenna) {
-            Alert.alert("Error", "Las contraseñas no coinciden.");
-            return; 
-        }
-    
         try {
-            const response = await axios.post('http://192.168.133.26:3000/api/v1/auth/register', {
-                name: nombre,
-                apellidos: apellidos,
-                nacimiento: fechaNacimiento,
-                email: email,
-                password: contrasenna
-            });
-            Alert.alert("Registro Exitoso", "Usuario creado correctamente.");
-            console.log("Datos del token: ", response.data.token);
-        } catch (error) {
-            if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-                Alert.alert("Fallo de Registro", error.response.data.message);
-            } else if (error.request) {
-                console.log(error.request);
-                Alert.alert("Fallo de Registro", "No hay respuesta del servidor");
+            if(contrasenna === verficaContrasenna){
+                const result = await registerResponse({
+                    variables:{
+                        nombre:nombre,
+                        apellidos:apellidos,
+                        fechaNacimiento:fechaNacimiento,
+                        email:email,
+                        pass:contrasenna
+                    }
+                });
+                console.log("Datos Ingresados: ",result.data.register.message)
+                Alert.alert("Exito!","Felicidades tu registro se completó")
+                navigation.navigate("Login");
+            }else{
+                Alert.alert("Error!","Las contraseñas debe coincidir");
+            }
+            
+        } catch (e) {
+            if (error) {
+                // Error de GraphQL o error de red
+                if (error.graphQLErrors.length > 0) {
+                    // Errores de GraphQL enviados desde el servidor
+                    Alert.alert("Error de servidor", "El correo ingresado ya esta registrado!");
+                } else if (error.networkError) {
+                    // Error de red, como un problema de conexión
+                    Alert.alert("Error de red", error.networkError.message || "Problemas de conexión");
+                } else {
+                    // Otros tipos de errores no específicamente de red o GraphQL
+                    Alert.alert("Error", error.message);
+                }
             } else {
-                console.log('Error', error.message);
-                Alert.alert("Fallo de Registro", error.message);
+                // Error capturado en el try-catch que no es específico de GraphQL
+                Alert.alert("Error", e.message);
             }
         }
     };
@@ -59,6 +62,7 @@ const Register = () =>{
         setFechaNacimiento(newDate); 
     };
 
+    if (loading) return <Loading/>;
 
     return(
 
@@ -94,7 +98,6 @@ const Register = () =>{
 
             <DateInput 
             onDateChange={handleDateChange}
-            
             />
 
             <Text style = {styles.textoRegister}>

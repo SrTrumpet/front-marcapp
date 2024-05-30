@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import { TextInput, Text, View } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import styles from './../components/style/styles';
 import ButtonGradient from './../ButtonGradient';
 import Loading from "./Loading";
+import * as SecureStore from 'expo-secure-store';
 
 import Home from '../screens/Home';
 
@@ -19,56 +20,33 @@ const Login = ({navigation}) =>{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [login ,{loading, error}] = useMutation(INICIO_SESION);
+    const [loginRecive ,{loading, error}] = useMutation(INICIO_SESION);
+
+
+    useEffect(() => {
+        const checkToken = async () => {
+            const token = await SecureStore.getItemAsync('userToken');
+            if (token) {
+                navigation.navigate('Home');
+            }
+        };
+        checkToken();
+    }, [navigation]);
 
     const handleLogin = async() => {
-        console.log("ASDASAD");
         try {
-            const result = await login({
+            const result = await loginRecive({
                 variables: {
                     email: email,
                     password: password
                 }
             });
-
-            console.log('Login success:', result.data.login.tocken);
-        
+            console.log('Login success:', result.data.login.token);
+            await SecureStore.setItemAsync('userToken', result.data.login.token);
+            navigation.navigate('Home');
         } catch (e){
             console.error('Login error:', e);
         }
-
-
-
-        /*
-        // Mostrar los datos en la consola
-        try{const response = await axios.post('http://192.168.133.26:3000/api/v1/auth/login',
-            {
-                email:email,
-                password:password
-            });
-        
-            setTocken(response.data.tocken);
-            console.log("Datos ingresados:", { email, password });
-            console.log("Datos del tocken: ",response.data.tocken);
-            
-
-        } catch (error){
-            if (error.response){
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-                Alert.alert("Fallo de Login", error.response.data.message);
-            }else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-                Alert.alert("Fallo de Login", "No hay respuesta del servidor");
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-                Alert.alert("Login Failed", error.message);
-            }
-        }
-        */
     };
 
     if (loading) return <Text>Loading...</Text>;

@@ -17,8 +17,8 @@ export const FORGOT_PASS = gql`
 `;
 
 export const REGISTER = gql`
-    mutation Register($nombre: String!, $apellidos: String!, $email: String!, $pass: String!) {
-        register(name: $nombre, apellidos: $apellidos, email: $email, password: $pass) {
+    mutation Register($nombre: String!, $apellidos: String!,$fechaNacimiento: String!, $email: String!, $pass: String!) {
+        register(name: $nombre, apellidos: $apellidos,nacimiento: $fechaNacimiento, email: $email, password: $pass) {
             message
         }
     }
