@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from "react";
-import { TextInput, Text, View } from "react-native";
+import { TextInput, Text, View, Alert } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import styles from './../components/style/styles';
 import ButtonGradient from './../ButtonGradient';
@@ -7,47 +7,48 @@ import Loading from "./Loading";
 import * as SecureStore from 'expo-secure-store';
 
 //Mutaciones y Queries
+import { VERIFICAR_TOKEN } from "../graphql/query/auth";
 import { INICIO_SESION } from '../graphql/mutations/auth';
-import { useMutation} from '@apollo/client';
+import { useMutation, useQuery} from '@apollo/client';
 
-
-const Login = ({navigation}) =>{
-
+const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const [loginRecive ,{loading, error}] = useMutation(INICIO_SESION);
-
+    const { data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN);
+    const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION);
 
     useEffect(() => {
-        const checkToken = async () => {
-            const token = await SecureStore.getItemAsync('userToken');
-            if (token) {
-                navigation.navigate('Home');
-            }
-        };
-        checkToken();
-    }, [navigation]);
+        //console.log("SDASSD");
+        if (verifyData && verifyData.verificarInicioSesion) {
+            navigation.navigate('Home');
+        } else if (verifyError) {
+            //console.error("Error on token verification:", verifyError.message);
+            Alert.alert("Error!", "Tu sesión ha expirado, vuelve a iniciar sesión.");
+        }
+    }, [verifyData, verifyError, navigation]);
 
-    const handleLogin = async() => {
+
+
+    const handleLogin = async () => {
         try {
-            const result = await loginRecive({
+            const result = await login({
                 variables: {
-                    email: email,
-                    password: password
+                    email,
+                    password
                 }
             });
             console.log('Login success:', result.data.login.token);
             await SecureStore.setItemAsync('userToken', result.data.login.token);
             navigation.navigate('Home');
-        } catch (e){
-            console.error('Login error:', e);
+        } catch (e) {
+            console.error('Login error:', e.message);
+            Alert.alert("Login Error", e.message);
         }
     };
 
-    if (loading) return <Loading/>;
-    if (error) return <Text>Error! {error.message}</Text>;
-    
+
+    if (verifyLoading || loginLoading) return <Loading />;
+    if (loginError) return <Text>Error! {loginError.message}</Text>;
 
     return(
         <View style = {styles.container}>

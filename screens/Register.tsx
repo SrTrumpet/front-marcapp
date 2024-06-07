@@ -8,6 +8,7 @@ import { useMutation } from "@apollo/client";
 import { REGISTER } from "../graphql/mutations/auth";
 import Loading from "./Loading";
 
+
 const Register = ({navigation}) =>{
 
     const [nombre, setNombre]  = useState('');
@@ -18,6 +19,8 @@ const Register = ({navigation}) =>{
     const [verficaContrasenna, setVerificaContrasenna] = useState('');
 
     const [registerResponse,{loading,error}] = useMutation(REGISTER);
+
+    
 
     const handleRegister = async () => {
         try {
@@ -31,8 +34,9 @@ const Register = ({navigation}) =>{
                         pass:contrasenna
                     }
                 });
-                console.log("Datos Ingresados: ",result.data.register.message)
-                Alert.alert("Exito!","Felicidades tu registro se completó")
+                //console.log("Datos Ingresados: ",result.data.register.message)
+                //Alert.alert("Exito!","Felicidades tu registro se completó")
+                
                 navigation.navigate("Login");
             }else{
                 Alert.alert("Error!","Las contraseñas debe coincidir");

@@ -7,6 +7,7 @@ import ButtonMarcarSalida from "../components/button/ButtonMarcarSalida";
 import ButtonCerrarSesion from "../components/button/ButtonCerrarSesion";
 
 //Estilos
+import * as SecureStore from 'expo-secure-store';
 import styles from "../components/style/styles";
 
 const Home = ({navigation}) =>{
@@ -19,8 +20,10 @@ const Home = ({navigation}) =>{
         console.log("Boton Salida")
     }
 
-    const handleCerrarSesion =() =>{
+    const handleCerrarSesion = async() =>{
         console.log("Cerrar Sesion")
+        await SecureStore.deleteItemAsync('userToken');
+        navigation.navigate("Login");
     }
 
     return(

@@ -3,12 +3,11 @@ import { StatusBar } from 'expo-status-bar';
 import { TextInput, Text, View, Alert} from "react-native";
 import styles from './../components/style/styles';
 import ButtonForgot from '../components/button/ButtonForgot'
-import axios from 'axios';
 import { FORGOT_PASS } from "../graphql/mutations/auth/index";
 import { useMutation } from "@apollo/client";
 import Loading from "./Loading";
 
-const ForgotPass = () =>{
+const ForgotPass = ({navigation}) =>{
 
     const [forgot,{loading,error}] = useMutation(FORGOT_PASS);
     const [email, setEmail] = useState('');
@@ -21,8 +20,8 @@ const ForgotPass = () =>{
                 }
             });
             if (result.data.forgotPass) {
-                console.log('ForgotPass Success:', result.data.forgotPass.message);
-                Alert.alert("Exito!", "Su nueva contraseña se envió a su correo");
+                Alert.alert("Exito!", result.data.forgotPass.message);    
+                navigation.navigate("Login");
             } else {
                 // Si no hay errores de GraphQL, pero tampoco datos como esperábamos
                 throw new Error("No data received");
