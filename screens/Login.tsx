@@ -11,18 +11,19 @@ import { VERIFICAR_TOKEN } from "../graphql/query/auth";
 import { INICIO_SESION } from '../graphql/mutations/auth';
 import { useMutation, useQuery} from '@apollo/client';
 
+import { clientUsuarios } from '../graphql/ApolloClienteContext';
+
 const Login = ({ navigation }) => {
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN);
-    const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION);
+    const { data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN, { client: clientUsuarios });
+    const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION, { client: clientUsuarios });
 
     useEffect(() => {
-        //console.log("SDASSD");
         if (verifyData && verifyData.verificarInicioSesion) {
-            navigation.navigate('Home');
+            navigation.replace('Home');
         } else if (verifyError) {
-            //console.error("Error on token verification:", verifyError.message);
             Alert.alert("Error!", "Tu sesión ha expirado, vuelve a iniciar sesión.");
         }
     }, [verifyData, verifyError, navigation]);
@@ -39,7 +40,7 @@ const Login = ({ navigation }) => {
             });
             console.log('Login success:', result.data.login.token);
             await SecureStore.setItemAsync('userToken', result.data.login.token);
-            navigation.navigate('Home');
+            navigation.replace('Home');
         } catch (e) {
             console.error('Login error:', e.message);
             Alert.alert("Login Error", e.message);

@@ -6,10 +6,11 @@ import ButtonForgot from '../components/button/ButtonForgot'
 import { FORGOT_PASS } from "../graphql/mutations/auth/index";
 import { useMutation } from "@apollo/client";
 import Loading from "./Loading";
+import { clientUsuarios } from '../graphql/ApolloClienteContext';
 
 const ForgotPass = ({navigation}) =>{
 
-    const [forgot,{loading,error}] = useMutation(FORGOT_PASS);
+    const [forgot,{loading,error}] = useMutation(FORGOT_PASS, { client: clientUsuarios });
     const [email, setEmail] = useState('');
 
     const handleReset = async () => {
