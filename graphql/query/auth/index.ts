@@ -5,3 +5,18 @@ export const VERIFICAR_TOKEN = gql`
         verificarInicioSesionVesionDos
     }
 `
+
+export const OBTENER_INFO = gql`
+    query{
+        conseguirInformacionUsuario{
+            nombre
+            correo
+        }
+    }
+`
+
+export const CONSEGUIR_ROL = gql`
+    query{
+        conseguirRol
+    }
+`

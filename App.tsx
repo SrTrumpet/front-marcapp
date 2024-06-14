@@ -11,6 +11,7 @@ import Update from './screens/Update';
 //import { getToken } from './utils/tokenStorage';
 //import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, split } from '@apollo/client';
 import {ApolloClientsContext, clientUsuarios, clientMarcaje } from './graphql/ApolloClienteContext';
+import PerfilAdmin from './screens/PerfilAdmin';
 
 
 const Stack = createNativeStackNavigator();
@@ -27,6 +28,7 @@ export default function App() {
           <Stack.Screen name="Home" component={Home}/>
           <Stack.Screen name="Perfil" component={Perfil}/>
           <Stack.Screen name="Update" component={Update}/>
+          <Stack.Screen name="Perfil Admin" component={PerfilAdmin}/>
         </Stack.Navigator>
       </NavigationContainer>
     </ApolloClientsContext.Provider>

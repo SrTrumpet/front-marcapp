@@ -7,27 +7,43 @@ import Loading from "./Loading";
 import * as SecureStore from 'expo-secure-store';
 
 //Mutaciones y Queries
-import { VERIFICAR_TOKEN } from "../graphql/query/auth";
+import { CONSEGUIR_ROL, VERIFICAR_TOKEN } from "../graphql/query/auth";
 import { INICIO_SESION } from '../graphql/mutations/auth';
 import { useMutation, useQuery} from '@apollo/client';
 
 import { clientUsuarios } from '../graphql/ApolloClienteContext';
+import { CONSULTAR_DATOS } from "../graphql/mutations/users";
 
 const Login = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const {data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN, { client: clientUsuarios });
+    const {data: infoUsuario} = useQuery(CONSEGUIR_ROL, {client: clientUsuarios});
     const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION, { client: clientUsuarios});
 
     useEffect(() => {
         const handleData = async () => {
             clientUsuarios.resetStore();
+
+            console.log("Dato entrada admin user",infoUsuario.conseguirRol);
+            console.log("Dato de token",verifyData.verificarInicioSesionVesionDos);
             try {
-                console.log(verifyData.verificarInicioSesionVesionDos);
                 if (verifyData.verificarInicioSesionVesionDos) {
-                    navigation.replace('Home');
+                    
+                    if(infoUsuario.conseguirRol){
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Perfil Admin' }],
+                        });
+                    }else{
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Home' }],
+                        });
+                    }
                 }else{
+
                     Alert.alert("Error","El tiempo de sesion expiró o haz cerrado sesion")
                 }
             } catch (e) {
@@ -35,11 +51,11 @@ const Login = ({ navigation }) => {
                 navigation.navigate('Login');
             }
         };
-        
         handleData();
     }, [verifyData, verifyError, navigation]);
 
     const handleLogin = async () => {
+        clientUsuarios.resetStore();
         try {
             const result = await login({
                 variables: {
@@ -49,7 +65,23 @@ const Login = ({ navigation }) => {
             });
             console.log('Login success:', result.data.login.token);
             await SecureStore.setItemAsync('userToken', result.data.login.token);
-            navigation.replace('Home');
+
+            const roleResult = await clientUsuarios.query({
+                query: CONSEGUIR_ROL,
+                fetchPolicy: 'network-only'  
+            });
+
+            if(roleResult.data.conseguirRol){
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Perfil Admin' }],
+                });
+            }else{
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Home' }],
+                });
+            }
         } catch (e) {
             console.error('Login error:', e.message);
             Alert.alert("Login Error", e.message);
@@ -59,6 +91,7 @@ const Login = ({ navigation }) => {
 
     if (verifyLoading || loginLoading) return <Loading />;
     //if (loginError) return <Text>Error! {loginError.message}</Text>;
+    infoUsuario;
 
     return(
         <View style = {styles.container}>

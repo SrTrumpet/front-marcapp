@@ -44,8 +44,7 @@ const styles = StyleSheet.create({
     },
 
     contenedorBotonesMarcaje: {
-        
-        top:350,
+        top:280,
         padding: 20, // Agrega un poco de espacio alrededor
     },
 

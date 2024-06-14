@@ -7,31 +7,40 @@ import ButtonCerrarSesion from "../components/button/ButtonCerrarSesion";
 
 //Estilos
 import * as SecureStore from 'expo-secure-store';
+import stylesHome from "../components/style/stylesHome";
 import styles from "../components/style/styles";
 
 //GraphQL
 import { MARCAR_HORA } from "../graphql/mutations/horario";
-import { clientMarcaje } from '../graphql/ApolloClienteContext';
-import { useMutation} from '@apollo/client';
+import { clientMarcaje, clientUsuarios } from '../graphql/ApolloClienteContext';
+import { useMutation, useQuery} from '@apollo/client';
 
 import Loading from "./Loading";
+import { useEffect } from "react";
+import { OBTENER_INFO } from "../graphql/query/auth";
+import ButtonCambiarInfo from "../components/button/ButtonCambiarInfo";
 
 const Home = ({navigation}) =>{
 
     const [marcar, {loading}] = useMutation(MARCAR_HORA, {client: clientMarcaje});
+    const{data:infoUsuario} = useQuery(OBTENER_INFO,{ client: clientUsuarios});
+
+    useEffect(() => {
+        clientUsuarios.resetStore();
+    }, [infoUsuario])
 
     const handleMarcarEntrada = async () =>{
-        console.log("Boton entrada")
+        console.log("Usuario presionó Boton entrada")
         marcarHora("entrada");
     }
 
     const handleMarcarSalida = async () =>{
-        console.log("Boton Salida")
+        console.log("Usuario presionó Boton Salida")
         marcarHora("salida");
     }
 
     const handleCerrarSesion = async() =>{
-        console.log("Cerrar Sesion")
+        console.log("Usuario presionó Cerrar Sesion")
         await SecureStore.deleteItemAsync('userToken');
         navigation.reset({
             index: 0,
@@ -39,7 +48,10 @@ const Home = ({navigation}) =>{
         });
     }
 
-    
+    const handleCambiarInfo = async() =>{
+        console.log("Usuario cambio a la pagina Perfil");
+        navigation.navigate('Perfil');
+    }
 
     async function marcarHora(accion){
         try {
@@ -65,16 +77,18 @@ const Home = ({navigation}) =>{
 
     if (loading) return <Loading/>;
 
+    const nombreUsuario = infoUsuario?.conseguirInformacionUsuario?.nombre || '[Usuario]';
+
     return(
         <View>
             
             <View>
-                <View>
-                    <Text>Info Usuario  =</Text>
+                <View style={stylesHome.contenedorSaludo}>
+                    <Text style = {stylesHome.saludo}>Hola, {nombreUsuario}</Text>
                 </View>
 
                 <View>
-                    <Text>Cambiar Contraseña</Text>
+                    <ButtonCambiarInfo onPress={handleCambiarInfo}/>
                 </View>
             </View>
 
