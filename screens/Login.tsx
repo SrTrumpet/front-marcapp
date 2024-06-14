@@ -17,18 +17,27 @@ const Login = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN, { client: clientUsuarios });
-    const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION, { client: clientUsuarios });
+    const {data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN, { client: clientUsuarios });
+    const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION, { client: clientUsuarios});
 
     useEffect(() => {
-        if (verifyData && verifyData.verificarInicioSesion) {
-            navigation.replace('Home');
-        } else if (verifyError) {
-            Alert.alert("Error!", "Tu sesión ha expirado, vuelve a iniciar sesión.");
-        }
+        const handleData = async () => {
+            clientUsuarios.resetStore();
+            try {
+                console.log(verifyData.verificarInicioSesionVesionDos);
+                if (verifyData.verificarInicioSesionVesionDos) {
+                    navigation.replace('Home');
+                }else{
+                    Alert.alert("Error","El tiempo de sesion expiró o haz cerrado sesion")
+                }
+            } catch (e) {
+                //Alert.alert("Error","El tiempo de sesion expiró o haz cerrado sesion")
+                navigation.navigate('Login');
+            }
+        };
+        
+        handleData();
     }, [verifyData, verifyError, navigation]);
-
-
 
     const handleLogin = async () => {
         try {
@@ -49,7 +58,7 @@ const Login = ({ navigation }) => {
 
 
     if (verifyLoading || loginLoading) return <Loading />;
-    if (loginError) return <Text>Error! {loginError.message}</Text>;
+    //if (loginError) return <Text>Error! {loginError.message}</Text>;
 
     return(
         <View style = {styles.container}>

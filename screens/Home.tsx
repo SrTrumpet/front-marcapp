@@ -14,39 +14,56 @@ import { MARCAR_HORA } from "../graphql/mutations/horario";
 import { clientMarcaje } from '../graphql/ApolloClienteContext';
 import { useMutation} from '@apollo/client';
 
+import Loading from "./Loading";
 
 const Home = ({navigation}) =>{
 
-
-    const [marcarEntrada, {loading: loadingEntrada, error: errorEntrada,data: dataEntrada}] = useMutation(MARCAR_HORA, {client: clientMarcaje});
-
+    const [marcar, {loading}] = useMutation(MARCAR_HORA, {client: clientMarcaje});
 
     const handleMarcarEntrada = async () =>{
         console.log("Boton entrada")
-        try {
-            const result = await marcarEntrada({
-                variables:{
-                    accion:"entrada"
-                }
-            });
-            console.log(result.data)
-            Alert.alert("Exito!", dataEntrada.data.message);
-        } catch (errorEntrada) {
-            Alert.alert("Error!",dataEntrada.message );
-        }
-
-
+        marcarHora("entrada");
     }
 
-    const handleMarcarSalida = () =>{
+    const handleMarcarSalida = async () =>{
         console.log("Boton Salida")
+        marcarHora("salida");
     }
 
     const handleCerrarSesion = async() =>{
         console.log("Cerrar Sesion")
         await SecureStore.deleteItemAsync('userToken');
-        navigation.replace('Login');
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+        });
     }
+
+    
+
+    async function marcarHora(accion){
+        try {
+            const result = await marcar({
+                variables:{
+                    accion: accion
+                }
+            });
+            if (result.data.marcarHora.tipo == 1) {
+                Alert.alert("Exito!", result.data.marcarHora.message);
+            } else {
+                Alert.alert("Error!", result.data.marcarHora.message );
+            }
+        } catch (errorEntrada) {
+            Alert.alert("Error!", "Tu tiempo de sesion a expirado, vuelve a iniciar sesion para marcar tu hora" );
+            await SecureStore.deleteItemAsync('userToken');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
+        }
+    }
+
+    if (loading) return <Loading/>;
 
     return(
         <View>

@@ -3,8 +3,8 @@ import { ApolloClient, InMemoryCache, HttpLink, ApolloLink } from '@apollo/clien
 import { setContext } from '@apollo/client/link/context';
 import { getToken } from '../utils/tokenStorage';
 
-const httpLinkUsuarios = new HttpLink({ uri: 'http://192.168.201.234:3000/graphql' });
-const httpLinkMarcaje = new HttpLink({ uri: 'http://192.168.201.234:3001/graphql' });
+const httpLinkUsuarios = new HttpLink({ uri: 'http://192.168.201.101:3000/graphql' });
+const httpLinkMarcaje = new HttpLink({ uri: 'http://192.168.201.101:3001/graphql' });
 
 const authLink = setContext(async (_, { headers }) => {
     const token = await getToken();
@@ -24,6 +24,6 @@ export const clientMarcaje = new ApolloClient({
     link: ApolloLink.from([authLink, httpLinkMarcaje]),
     cache: new InMemoryCache(),
 });
-  
+
 export const ApolloClientsContext = createContext({ clientUsuarios, clientMarcaje });
 

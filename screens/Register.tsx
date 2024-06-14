@@ -7,7 +7,7 @@ import DateInput from '../components/button/DateInput';
 import { useMutation } from "@apollo/client";
 import { REGISTER } from "../graphql/mutations/auth";
 import Loading from "./Loading";
-
+import { clientUsuarios } from '../graphql/ApolloClienteContext';
 
 const Register = ({navigation}) =>{
 
@@ -18,7 +18,7 @@ const Register = ({navigation}) =>{
     const [contrasenna, setContrasenna] = useState('');
     const [verficaContrasenna, setVerificaContrasenna] = useState('');
 
-    const [registerResponse,{loading,error}] = useMutation(REGISTER);
+    const [registerResponse,{loading,error}] = useMutation(REGISTER, { client: clientUsuarios });
 
     
 
@@ -35,7 +35,7 @@ const Register = ({navigation}) =>{
                     }
                 });
                 //console.log("Datos Ingresados: ",result.data.register.message)
-                //Alert.alert("Exito!","Felicidades tu registro se completó")
+                Alert.alert("Exito!","Felicidades tu registro se completó")
                 
                 navigation.navigate("Login");
             }else{
