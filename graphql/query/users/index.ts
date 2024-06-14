@@ -7,3 +7,13 @@ export const ACTUALIZAR_DATOS = gql`
         }
     }
 `
+
+export const BUSCAR_USUARIOS = gql`
+    query buscarUsuario($name:String!){
+    findUsersByName(name:$name){
+        id
+        name
+        email
+    }
+}
+`
