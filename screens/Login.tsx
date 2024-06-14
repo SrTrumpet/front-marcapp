@@ -25,13 +25,10 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         const handleData = async () => {
             clientUsuarios.resetStore();
-
-            console.log("Dato entrada admin user",infoUsuario.conseguirRol);
-            console.log("Dato de token",verifyData.verificarInicioSesionVesionDos);
             try {
                 if (verifyData.verificarInicioSesionVesionDos) {
                     
-                    if(infoUsuario.conseguirRol){
+                    if(infoUsuario?.conseguirRol){
                         navigation.reset({
                             index: 0,
                             routes: [{ name: 'Perfil Admin' }],
@@ -92,6 +89,7 @@ const Login = ({ navigation }) => {
     if (verifyLoading || loginLoading) return <Loading />;
     //if (loginError) return <Text>Error! {loginError.message}</Text>;
     infoUsuario;
+
 
     return(
         <View style = {styles.container}>
