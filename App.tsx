@@ -12,6 +12,7 @@ import Update from './screens/Update';
 //import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, split } from '@apollo/client';
 import {ApolloClientsContext, clientUsuarios, clientMarcaje } from './graphql/ApolloClienteContext';
 import PerfilAdmin from './screens/PerfilAdmin';
+import { ToastProvider } from 'react-native-toast-notifications'
 
 
 const Stack = createNativeStackNavigator();
@@ -20,17 +21,19 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <ApolloClientsContext.Provider value={{ clientUsuarios, clientMarcaje }}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Login" component = {Login}/>
-          <Stack.Screen name="ForgotPass" component={ForgotPass}/>
-          <Stack.Screen name="Register" component={Register}/>
-          <Stack.Screen name="Home" component={Home}/>
-          <Stack.Screen name="Perfil" component={Perfil}/>
-          <Stack.Screen name="Update" component={Update}/>
-          <Stack.Screen name="Perfil Admin" component={PerfilAdmin}/>
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ToastProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Login" component = {Login}/>
+            <Stack.Screen name="ForgotPass" component={ForgotPass}/>
+            <Stack.Screen name="Register" component={Register}/>
+            <Stack.Screen name="Home" component={Home}/>
+            <Stack.Screen name="Perfil" component={Perfil}/>
+            <Stack.Screen name="Update" component={Update}/>
+            <Stack.Screen name="Perfil Admin" component={PerfilAdmin}/>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ToastProvider>
     </ApolloClientsContext.Provider>
   );
 }

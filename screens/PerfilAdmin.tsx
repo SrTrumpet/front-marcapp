@@ -1,4 +1,4 @@
-import React, {useEffect,useState, useRef} from "react";
+import React, {useEffect,useState, useRef, useCallback} from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
 
 //STYLES
@@ -45,7 +45,7 @@ const PerfilAdmin = ({navigation}) =>{
     };
 
     const onSubmit = () => {
-        getUsers();
+        getUsers({ variables: { name: search } });
         setSearch(''); // Limpiar el campo de búsqueda después de enviar
     };
 
@@ -62,9 +62,9 @@ const PerfilAdmin = ({navigation}) =>{
             <TextInput
                 style={stylesPerfil.input}
                 placeholder="Buscar usuario por nombre"
+                value={search}
                 onChangeText={setSearch}
-                onSubmitEditing={() => getUsers()}
-                 // Ejecuta la búsqueda cuando el usuario envía el texto
+                onSubmitEditing={onSubmit} 
             />
 
             <ScrollView style={{ marginTop: 20 }}>

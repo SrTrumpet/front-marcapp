@@ -24,10 +24,10 @@ const Login = ({ navigation }) => {
 
     useEffect(() => {
         const handleData = async () => {
-            clientUsuarios.resetStore();
             try {
+                clientUsuarios.resetStore();
                 if (verifyData.verificarInicioSesionVesionDos) {
-                    
+                    clientUsuarios.resetStore();
                     if(infoUsuario?.conseguirRol){
                         navigation.reset({
                             index: 0,
@@ -40,7 +40,6 @@ const Login = ({ navigation }) => {
                         });
                     }
                 }else{
-
                     Alert.alert("Error","El tiempo de sesion expiró o haz cerrado sesion")
                 }
             } catch (e) {
@@ -74,10 +73,7 @@ const Login = ({ navigation }) => {
                     routes: [{ name: 'Perfil Admin' }],
                 });
             }else{
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Home' }],
-                });
+                navigation.replace("Home");
             }
         } catch (e) {
             console.error('Login error:', e.message);
