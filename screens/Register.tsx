@@ -8,7 +8,7 @@ import { useMutation } from "@apollo/client";
 import { REGISTER } from "../graphql/mutations/auth";
 import Loading from "./Loading";
 import { clientUsuarios } from '../graphql/ApolloClienteContext';
-import { useToast } from "react-native-toast-notifications";
+import { useToast } from "react-native-toast-notifications";//Recordar usar esto para personalizar las notificaciones
 
 const Register = ({navigation}) =>{
 

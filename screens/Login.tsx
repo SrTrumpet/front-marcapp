@@ -25,9 +25,9 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         const handleData = async () => {
             try {
-                clientUsuarios.resetStore();
+                await clientUsuarios.resetStore();
                 if (verifyData.verificarInicioSesionVesionDos) {
-                    clientUsuarios.resetStore();
+                    await clientUsuarios.resetStore();
                     if(infoUsuario?.conseguirRol){
                         navigation.reset({
                             index: 0,
@@ -51,7 +51,7 @@ const Login = ({ navigation }) => {
     }, [verifyData, verifyError, navigation]);
 
     const handleLogin = async () => {
-        clientUsuarios.resetStore();
+        await clientUsuarios.resetStore();
         try {
             const result = await login({
                 variables: {
@@ -83,8 +83,7 @@ const Login = ({ navigation }) => {
 
 
     if (verifyLoading || loginLoading) return <Loading />;
-    //if (loginError) return <Text>Error! {loginError.message}</Text>;
-    infoUsuario;
+    //infoUsuario;
 
 
     return(
