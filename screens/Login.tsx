@@ -47,11 +47,11 @@ const Login = ({ navigation }) => {
                     toast.show("El tiempo de sesion expiró o haz cerrado sesion",{ type: "warning" });
                 }
             } catch (e) {
-                navigation.navigate('Login');
+                //navigation.navigate('Login');
             }
         };
         handleData();
-    }, [verifyData, verifyError]);
+    }, [verifyData, verifyError, infoUsuario]);
 
     const handleLogin = async () => {
         await clientUsuarios.resetStore();

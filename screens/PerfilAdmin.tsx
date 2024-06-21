@@ -18,10 +18,6 @@ import * as SecureStore from 'expo-secure-store';
 import stylesPerfil from "../components/style/strylePerfil";
 import Loading from "./Loading";
 
-
-
-
-
 const PerfilAdmin = ({navigation}) =>{
 
     const{data:infoUsuario} = useQuery(OBTENER_INFO,{ client: clientUsuarios});
