@@ -43,6 +43,10 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
 
+    containerGrafico:{
+        marginTop: 30
+    },
+
     containerVerSemana:{
         marginTop: 200
     },

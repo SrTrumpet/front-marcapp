@@ -5,6 +5,7 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-nativ
 import styles from "../components/style/styles";
 import ButtonCerrarSesion from "../components/button/ButtonCerrarSesion";
 import stylesHome from "../components/style/stylesHome";
+import ButtonGrafico from "../components/button/ButtonGrafico";
 
 //GRAPHQL
 import { useQuery, useLazyQuery } from "@apollo/client";
@@ -16,6 +17,9 @@ import { clientUsuarios } from '../graphql/ApolloClienteContext';
 import * as SecureStore from 'expo-secure-store';
 import stylesPerfil from "../components/style/strylePerfil";
 import Loading from "./Loading";
+
+
+
 
 
 const PerfilAdmin = ({navigation}) =>{
@@ -43,6 +47,11 @@ const PerfilAdmin = ({navigation}) =>{
         console.log("Usuario seleccionado:", userId);
         navigation.navigate('Update', { userId });
     };
+
+
+    const handleGraficos = () => {
+        console.log("El administrador entro a los graficos");
+    }
 
     const onSubmit = () => {
         getUsers({ variables: { name: search } });
@@ -74,6 +83,10 @@ const PerfilAdmin = ({navigation}) =>{
                     </TouchableOpacity>
                 ))}
             </ScrollView>
+
+            <View>
+                <ButtonGrafico onPress={handleGraficos}/>
+            </View>
 
             <View>
                 <ButtonCerrarSesion onPress={handleCerrarSesion}/>
