@@ -51,6 +51,7 @@ const PerfilAdmin = ({navigation}) =>{
 
     const handleGraficos = () => {
         console.log("El administrador entro a los graficos");
+        navigation.navigate('Graficos');
     }
 
     const onSubmit = () => {

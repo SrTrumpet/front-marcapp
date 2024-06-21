@@ -8,6 +8,7 @@ import Home from './screens/Home';
 import Perfil from './screens/Perfil';
 import Update from './screens/Update';
 import VerRangoSemana from './screens/VerRangoSemana';
+import Graficos from './screens/Graficos';
 //import { setContext } from '@apollo/client/link/context';
 //import { getToken } from './utils/tokenStorage';
 //import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, split } from '@apollo/client';
@@ -33,6 +34,7 @@ export default function App() {
             <Stack.Screen name="Update" component={Update}/>
             <Stack.Screen name="Perfil Admin" component={PerfilAdmin}/>
             <Stack.Screen name="Rango Semana" component={VerRangoSemana}/>
+            <Stack.Screen name="Graficos" component={Graficos}/>
           </Stack.Navigator>
         </NavigationContainer>
       </ToastProvider>
