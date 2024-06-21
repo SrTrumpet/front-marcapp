@@ -94,7 +94,7 @@ const Update = ({ route, navigation }) => {
     return (
         <View style={styles.container}>
             <DateRangeInput onDateRangeChange={handleDateRangeChange} />
-            <ButtonRangoFechas onPress={handleRangoFechas} />
+            
             <View style={styles.headerRow}>
                 <Text style={styles.headerCell}>Día</Text>
                 <Text style={styles.headerCell}>Entrada</Text>
@@ -109,6 +109,7 @@ const Update = ({ route, navigation }) => {
                     <Text style={styles.cell}>{marcaje.horasTrabajadas.toFixed(2)}</Text>
                 </View>
             ))}
+            <ButtonRangoFechas onPress={handleRangoFechas} />
         </View>
     );
 };
