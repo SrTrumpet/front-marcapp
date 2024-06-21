@@ -43,8 +43,12 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
 
+    containerVerSemana:{
+        marginTop: 200
+    },
+
     contenedorBotonesMarcaje: {
-        top:220,
+        top:190,
         padding: 20, // Agrega un poco de espacio alrededor
     },
 

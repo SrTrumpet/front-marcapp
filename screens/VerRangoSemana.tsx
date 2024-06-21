@@ -20,14 +20,11 @@ import { CONSEGUIR_SEMANA } from "../graphql/query/marcaje";
 const VerRangoSemana = ({ navigation }) => {
     const { loading, data, error } = useQuery(CONSEGUIR_SEMANA, { client: clientMarcaje });
     const [conseguirRangoFechas,{ loading:rangoFechasLoading, data:rangoFechasData, error: rangoFechasError}] = useLazyQuery(CONSEGUIR_RANGO_SEMANA, { client: clientMarcaje });
-
     const [marcajes, setMarcajes] = useState<{ day: string, entrada: string, salida: string, horasTrabajadas: number }[]>([]);
     const [fechaInicio, setStartDate] = useState('');
     const [fechaFinal, setEndDate] = useState('');
 
-
     const initializeWeekDays = () => {
-        // Definir los días de la semana en el orden correcto comenzando por lunes
         const week = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes'];
         const daysMap = {};
         week.forEach(day => {
@@ -38,23 +35,22 @@ const VerRangoSemana = ({ navigation }) => {
 
     function getWeekday(dateStr) {
         const [day, month, year] = dateStr.split("-");
-        // Crear una fecha en JavaScript asumiendo el formato DD-MM-YYYY
-        const date = new Date(year, month - 1, day); // El mes en Date() es 0-indexed
+        const date = new Date(year, month - 1, day); 
         const weekdays = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
         return weekdays[date.getDay()];
     }
     
     useEffect(() => {
-        const daysMap = initializeWeekDays(); // Asegura que todos los días de la semana están representados
+        const daysMap = initializeWeekDays(); 
     
         if (data && data.verSemana) {
             data.verSemana.forEach((item) => {
-                const day = getWeekday(item.timestamp.split(' ')[0]); // Extrae la fecha y obtiene el día
+                const day = getWeekday(item.timestamp.split(' ')[0]); 
                 if (daysMap[day] !== undefined) {
                     if (item.tipo_marca === 'entrada') {
-                        daysMap[day].entrada = item.timestamp.split(' ')[1]; // Guarda solo la hora
+                        daysMap[day].entrada = item.timestamp.split(' ')[1];
                     } else if (item.tipo_marca === 'salida') {
-                        daysMap[day].salida = item.timestamp.split(' ')[1]; // Guarda solo la hora
+                        daysMap[day].salida = item.timestamp.split(' ')[1]; 
                         daysMap[day].horasTrabajadas = item.horas_trabajadas;
                     }
                 }
@@ -81,7 +77,6 @@ const VerRangoSemana = ({ navigation }) => {
                     }
                 }
             });
-
             setMarcajes(Object.keys(daysMap).map(key => ({
                 day: key.charAt(0).toUpperCase() + key.slice(1),
                 ...daysMap[key]
@@ -99,7 +94,6 @@ const VerRangoSemana = ({ navigation }) => {
     }
 
     if (loading || rangoFechasLoading) return <Loading />;
-    //if (error) return <Text>Error: {error.message}</Text>;
 
     return (
         <View style={styles.container}>

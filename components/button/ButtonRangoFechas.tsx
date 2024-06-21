@@ -5,7 +5,7 @@ import styles from '../style/styles';
 
 export default function ButtonRangoFechas ({ onPress }){
     return(
-        <TouchableOpacity style = {styles.containerButtonMarcaje} onPress={onPress}>
+        <TouchableOpacity style = {styles.containerVerSemana} onPress={onPress}>
             <LinearGradient
                 colors={['#4c669f','#192f6a']}
                 start={{x: 1, y:0}}

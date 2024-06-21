@@ -1,4 +1,4 @@
-import React, {useEffect,useState, useRef, useCallback} from "react";
+import React, {useEffect,useState} from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
 
 //STYLES
@@ -41,7 +41,7 @@ const PerfilAdmin = ({navigation}) =>{
 
     const handleUserPress = (userId) => {
         console.log("Usuario seleccionado:", userId);
-        // Falta la logica
+        navigation.navigate('Update', { userId });
     };
 
     const onSubmit = () => {

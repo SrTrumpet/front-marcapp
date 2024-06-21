@@ -3,7 +3,6 @@ import { TextInput, Text, View, ScrollView, Alert} from "react-native";
 import styles from './../components/style/styles';
 import ButtonRegister from '../components/button/ButtonRegister';
 import DateInput from '../components/button/DateInput';
-//import axios from 'axios';
 import { useMutation } from "@apollo/client";
 import { REGISTER } from "../graphql/mutations/auth";
 import Loading from "./Loading";
@@ -20,8 +19,7 @@ const Register = ({navigation}) =>{
     const [verficaContrasenna, setVerificaContrasenna] = useState('');
 
     const [registerResponse,{loading,error}] = useMutation(REGISTER, { client: clientUsuarios });
-
-    
+    const toast = useToast();
 
     const handleRegister = async () => {
         try {
@@ -36,29 +34,24 @@ const Register = ({navigation}) =>{
                     }
                 });
                 //console.log("Datos Ingresados: ",result.data.register.message)
-                Alert.alert("Exito!","Felicidades tu registro se completó")
-                
+                toast.show("Felicidades, tu registro se completó", { type: "success" });
                 navigation.navigate("Login");
             }else{
-                Alert.alert("Error!","Las contraseñas debe coincidir");
+                toast.show("Las contraseñas debe coincidir",{type:"danger"});
             }
             
         } catch (e) {
             if (error) {
                 // Error de GraphQL o error de red
                 if (error.graphQLErrors.length > 0) {
-                    // Errores de GraphQL enviados desde el servidor
-                    Alert.alert("Error de servidor", "El correo ingresado ya esta registrado!");
+                    toast.show("El correo ingresado ya esta registrado!",{type:"danger"});
                 } else if (error.networkError) {
-                    // Error de red, como un problema de conexión
-                    Alert.alert("Error de red", error.networkError.message || "Problemas de conexión");
+                    toast.show(error.networkError.message || "Problemas de conexión",{type:"danger"});
                 } else {
-                    // Otros tipos de errores no específicamente de red o GraphQL
-                    Alert.alert("Error", error.message);
+                    toast.show(error.message,{type:"danger"});
                 }
             } else {
-                // Error capturado en el try-catch que no es específico de GraphQL
-                Alert.alert("Error", e.message);
+                toast.show(error.message,{type:"danger"});
             }
         }
     };

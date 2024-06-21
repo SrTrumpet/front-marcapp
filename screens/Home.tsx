@@ -27,11 +27,14 @@ import { useMutation, useQuery} from '@apollo/client';
 import { getDistanceFromLatLonInM } from "../utils/geolocalizacion/locationUtils";
 const RADIO_PERMITIDO = 100;
 
+//NOTIFICACIONES
+import { useToast } from "react-native-toast-notifications";
 
 const Home = ({navigation}) =>{
-
     const [marcar, {loading}] = useMutation(MARCAR_HORA, {client: clientMarcaje});
     const{data:infoUsuario, error: errorUsuario, refetch: refetchUsuario} = useQuery(OBTENER_INFO,{ client: clientUsuarios});
+
+    const toast = useToast();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,15 +43,14 @@ const Home = ({navigation}) =>{
                 await refetchUsuario();
             } catch (error) {
                 console.error("Error al reiniciar el store o refetch:", error);
-                Alert.alert("Error", "Hubo un problema al obtener la información del usuario.");
+                toast.show("Hubo un problema al obtener la información del usuario.", {type: "danger"});
             }
         };
-
         fetchData();
     }, [infoUsuario]);
 
     const handleVerSemana = async () =>{
-        console.log("Usurio presiono el boton de ver la semana");
+        console.log("Usuario presiono el boton de ver la semana");
         await clientMarcaje.resetStore();
         navigation.navigate("Rango Semana");
     }
@@ -64,9 +66,8 @@ const Home = ({navigation}) =>{
     }
 
     const handleCerrarSesion = async() =>{
-        console.log("Usuario presionó Cerrar Sesion");
         await SecureStore.deleteItemAsync('userToken');
-        //await clientUsuarios.resetStore();
+        toast.show("Se cerró la sesion",{type:"success"});
         navigation.reset({
             index: 0,
             routes: [{ name: 'Login' }],
@@ -80,31 +81,24 @@ const Home = ({navigation}) =>{
 
     async function marcarHora(accion){
         try {
-            // Solicitar permisos de ubicación
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                Alert.alert('Permiso denegado', 'Necesitamos permisos de ubicación para continuar');
+                toast.show("Necesitamos permisos de ubicación para continuar",{type:"danger"});
                 return;
             }
-    
-            // Obtener la ubicación actual
+
             let location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest });
             const { latitude, longitude } = location.coords;
-
-            console.log("Coordenadas",latitude,longitude);
 
             const distancia = getDistanceFromLatLonInM(-29.982261, -71.348828, latitude, longitude);
 
             if (distancia > RADIO_PERMITIDO) {
-                Alert.alert("Error", "Debe estar dentro de 100 metros del centro para marcar la hora.");
+                toast.show("Debe estar dentro de 100 metros del centro para marcar la hora.",{type:"danger"});
                 return;
             }
 
             var ubicacion = latitude+","+longitude;
 
-            console.log("Ubicacion,",ubicacion);
-    
-            // Usar la latitud y longitud en la mutación
             const result = await marcar({
                 variables: {
                     accion: accion,
@@ -112,16 +106,13 @@ const Home = ({navigation}) =>{
                 }
             });
 
-            console.log(result);
-    
             if (result.data.marcarHora.tipo == 1) {
-                Alert.alert("Exito!", result.data.marcarHora.message);
+                toast.show(result.data.marcarHora.message,{type:"success"});
             } else {
-                Alert.alert("Error!", result.data.marcarHora.message);
+                toast.show(result.data.marcarHora.message,{type:"warning"});
             }
         } catch (errorEntrada) {
-            console.log(errorEntrada);
-            Alert.alert("Error!", "Tu tiempo de sesion a expirado, vuelve a iniciar sesion para marcar tu hora" );
+            toast.show("Tu tiempo de sesion a expirado, vuelve a iniciar sesion para marcar tu hora",{type:"warning"});
             await SecureStore.deleteItemAsync('userToken');
             navigation.reset({
                 index: 0,
@@ -131,12 +122,10 @@ const Home = ({navigation}) =>{
     }
 
     if (loading) return <Loading/>;
-
     const nombreUsuario = infoUsuario?.conseguirInformacionUsuario?.nombre || '[Usuario]';
 
     return(
         <View>
-            
             <View>
                 <View style={stylesHome.contenedorSaludo}>
                     <Text style = {stylesHome.saludo}>Hola, {nombreUsuario}</Text>
@@ -153,7 +142,6 @@ const Home = ({navigation}) =>{
                 <ButtonMarcarSalida onPress={handleMarcarSalida}/>
                 <ButtonCerrarSesion onPress={handleCerrarSesion}/>
             </View>
-
         </View>
     )
 }

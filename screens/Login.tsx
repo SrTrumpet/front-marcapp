@@ -10,9 +10,10 @@ import * as SecureStore from 'expo-secure-store';
 import { CONSEGUIR_ROL, VERIFICAR_TOKEN } from "../graphql/query/auth";
 import { INICIO_SESION } from '../graphql/mutations/auth';
 import { useMutation, useQuery} from '@apollo/client';
-
 import { clientUsuarios } from '../graphql/ApolloClienteContext';
-import { CONSULTAR_DATOS } from "../graphql/mutations/users";
+
+//NOTIFICACIONES
+import { useToast } from "react-native-toast-notifications";
 
 const Login = ({ navigation }) => {
 
@@ -21,6 +22,8 @@ const Login = ({ navigation }) => {
     const {data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN, { client: clientUsuarios });
     const {data: infoUsuario} = useQuery(CONSEGUIR_ROL, {client: clientUsuarios});
     const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION, { client: clientUsuarios});
+
+    const toast = useToast();
 
     useEffect(() => {
         const handleData = async () => {
@@ -34,21 +37,21 @@ const Login = ({ navigation }) => {
                             routes: [{ name: 'Perfil Admin' }],
                         });
                     }else{
+                        toast.show("Tu sesion sigue abierta",{type:"info"});
                         navigation.reset({
                             index: 0,
                             routes: [{ name: 'Home' }],
                         });
                     }
                 }else{
-                    Alert.alert("Error","El tiempo de sesion expiró o haz cerrado sesion")
+                    toast.show("El tiempo de sesion expiró o haz cerrado sesion",{ type: "warning" });
                 }
             } catch (e) {
-                //Alert.alert("Error","El tiempo de sesion expiró o haz cerrado sesion")
                 navigation.navigate('Login');
             }
         };
         handleData();
-    }, [verifyData, verifyError, navigation]);
+    }, [verifyData, verifyError]);
 
     const handleLogin = async () => {
         await clientUsuarios.resetStore();
@@ -68,23 +71,21 @@ const Login = ({ navigation }) => {
             });
 
             if(roleResult.data.conseguirRol){
+                toast.show("Se ingreso como administrador",{type:"info"});
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'Perfil Admin' }],
                 });
             }else{
+                toast.show("Bienvenido! haz ingresado como usuario",{type:"success"});
                 navigation.replace("Home");
             }
         } catch (e) {
-            console.error('Login error:', e.message);
-            Alert.alert("Login Error", e.message);
+            toast.show(e.nessage,{type:"danger"});
         }
     };
 
-
     if (verifyLoading || loginLoading) return <Loading />;
-    //infoUsuario;
-
 
     return(
         <View style = {styles.container}>
@@ -119,7 +120,6 @@ const Login = ({ navigation }) => {
 
             <StatusBar style="auto" />
     </View>
-
     )
 }
 

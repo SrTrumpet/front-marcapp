@@ -21,3 +21,23 @@ export const CONSEGUIR_RANGO_SEMANA = gql`
         }
     }
 `
+
+export const CONSEGUIR_SEMANA_USUARIO_ID = gql`
+    query($idUser: Float!){
+        conseguirSemanaUsuarioID(idUser: $idUser){
+            timestamp
+            tipo_marca
+            horas_trabajadas
+        }
+    }
+`
+
+export const CONSEGUIR_RANGO_SEMANA_USUARIO_ID = gql`
+    query($idUser: Float!,$rangoFechaInicio: String!, $rangoFechaFinal: String!){
+        conseguirRangoSemanaUsuarioID(idUser:$idUser, rangoFechaInicio:$rangoFechaInicio, rangoFechaFinal:$rangoFechaFinal){
+            timestamp
+            tipo_marca
+            horas_trabajadas
+        }
+    }
+`
