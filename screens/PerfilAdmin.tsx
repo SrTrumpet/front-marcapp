@@ -6,6 +6,7 @@ import styles from "../components/style/styles";
 import ButtonCerrarSesion from "../components/button/ButtonCerrarSesion";
 import stylesHome from "../components/style/stylesHome";
 import ButtonGrafico from "../components/button/ButtonGrafico";
+import ButtonGraficoAnual from "../components/button/ButtonGraficoAnual";
 
 //GRAPHQL
 import { useQuery, useLazyQuery } from "@apollo/client";
@@ -50,6 +51,10 @@ const PerfilAdmin = ({navigation}) =>{
         navigation.navigate('Graficos');
     }
 
+    const handleGraficoAnual = () =>{
+        navigation.navigate('Grafico Anual');
+    }
+
     const onSubmit = () => {
         getUsers({ variables: { name: search } });
         setSearch(''); // Limpiar el campo de búsqueda después de enviar
@@ -83,6 +88,10 @@ const PerfilAdmin = ({navigation}) =>{
 
             <View>
                 <ButtonGrafico onPress={handleGraficos}/>
+            </View>
+
+            <View>
+                <ButtonGraficoAnual onPress={handleGraficoAnual}/>
             </View>
 
             <View>

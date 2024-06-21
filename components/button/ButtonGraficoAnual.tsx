@@ -4,7 +4,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import styles from '../style/styles';
 
 
-export default function ButtonGrafico ({ onPress }){
+export default function ButtonGraficoAnual ({ onPress }){
     return(
         <TouchableOpacity style = {styles.containerGrafico} onPress={onPress}>
             <LinearGradient
@@ -12,7 +12,7 @@ export default function ButtonGrafico ({ onPress }){
                 start={{x: 1, y:0}}
                 end={{x:0 ,y:1}}
                 style = {styles.buttonMarcarEntrada}>
-                <Text style = {styles.text} >Ver grafico semanal</Text>
+                <Text style = {styles.text} >Ver grafico anual</Text>
             </LinearGradient>
         
         </TouchableOpacity>

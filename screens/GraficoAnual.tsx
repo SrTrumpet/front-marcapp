@@ -1,6 +1,6 @@
 // Graficos.tsx
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Dimensions } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { useLazyQuery } from "@apollo/client";
 import moment from "moment-timezone";
@@ -14,7 +14,7 @@ import Loading from "./Loading";
 import ButtonGenerarGrafico from "../components/button/ButtonGenerarGrafico";
 import DateRangeInput from "../components/button/DateRangeInput";
 
-const Graficos = ({ navigation }) => {
+const GraficoAnual = ({ navigation }) => {
     const [userId1, setUserId1] = useState("");
     const [userId2, setUserId2] = useState("");
     const [fechaInicio, setFechaInicio] = useState("");
@@ -26,45 +26,52 @@ const Graficos = ({ navigation }) => {
 
     useEffect(() => {
         if (graphData1 && graphData1.conseguirRangoSemanaUsuarioID) {
-            const daysMap = initializeWeekDays();
+            const monthsMap = initializeMonths();
             graphData1.conseguirRangoSemanaUsuarioID.forEach((item) => {
-                const day = getWeekday(item.timestamp.split(' ')[0]);
-                if (daysMap[day] !== undefined) {
-                    daysMap[day].horasTrabajadas += item.horas_trabajadas;
+                const month = getMonth(item.timestamp.split(' ')[0]);
+                if (monthsMap[month] !== undefined) {
+                    monthsMap[month] += item.horas_trabajadas;
                 }
             });
-            setData1(Object.keys(daysMap).map(key => daysMap[key].horasTrabajadas));
+            setData1(Object.keys(monthsMap).map(key => monthsMap[key]));
         }
     }, [graphData1]);
 
     useEffect(() => {
         if (graphData2 && graphData2.conseguirRangoSemanaUsuarioID) {
-            const daysMap = initializeWeekDays();
+            const monthsMap = initializeMonths();
             graphData2.conseguirRangoSemanaUsuarioID.forEach((item) => {
-                const day = getWeekday(item.timestamp.split(' ')[0]);
-                if (daysMap[day] !== undefined) {
-                    daysMap[day].horasTrabajadas += item.horas_trabajadas;
+                const month = getMonth(item.timestamp.split(' ')[0]);
+                if (monthsMap[month] !== undefined) {
+                    monthsMap[month] += item.horas_trabajadas;
                 }
             });
-            setData2(Object.keys(daysMap).map(key => daysMap[key].horasTrabajadas));
+            setData2(Object.keys(monthsMap).map(key => monthsMap[key]));
         }
     }, [graphData2]);
 
-    const initializeWeekDays = () => {
+    const initializeMonths = () => {
         return {
-            lunes: { horasTrabajadas: 0 },
-            martes: { horasTrabajadas: 0 },
-            miércoles: { horasTrabajadas: 0 },
-            jueves: { horasTrabajadas: 0 },
-            viernes: { horasTrabajadas: 0 },
+            Enero: 0,
+            Febrero: 0,
+            Marzo: 0,
+            Abril: 0,
+            Mayo: 0,
+            Junio: 0,
+            Julio: 0,
+            Agosto: 0,
+            Septiembre: 0,
+            Octubre: 0,
+            Noviembre: 0,
+            Diciembre: 0,
         };
     };
 
-    const getWeekday = (dateStr) => {
+    const getMonth = (dateStr) => {
         const [day, month, year] = dateStr.split("-");
         const date = new Date(year, month - 1, day);
-        const weekdays = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-        return weekdays[date.getDay()];
+        const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        return months[date.getMonth()];
     };
 
     const handleDateRangeChange = (inicio, final) => {
@@ -121,15 +128,15 @@ const Graficos = ({ navigation }) => {
                 <>
                     <LineChart
                         data={{
-                            labels: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+                            labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                             datasets: [
                                 {
-                                    data: data1.length ? data1 : [0, 0, 0, 0, 0],
+                                    data: data1.length ? data1 : Array(12).fill(0),
                                     color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Color para usuario 1
                                     strokeWidth: 2, // optional
                                 },
                                 {
-                                    data: data2.length ? data2 : [0, 0, 0, 0, 0],
+                                    data: data2.length ? data2 : Array(12).fill(0),
                                     color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Color para usuario 2
                                     strokeWidth: 2, // optional
                                 },
@@ -196,4 +203,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Graficos;
+export default GraficoAnual;
