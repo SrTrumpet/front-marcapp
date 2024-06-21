@@ -30,10 +30,11 @@ const GraficoAnual = ({ navigation }) => {
             graphData1.conseguirRangoSemanaUsuarioID.forEach((item) => {
                 const month = getMonth(item.timestamp.split(' ')[0]);
                 if (monthsMap[month] !== undefined) {
-                    monthsMap[month] += item.horas_trabajadas;
+                    monthsMap[month].totalHoras += item.horas_trabajadas;
+                    monthsMap[month].diasTrabajados++;
                 }
             });
-            setData1(Object.keys(monthsMap).map(key => monthsMap[key]));
+            setData1(Object.keys(monthsMap).map(key => monthsMap[key].totalHoras / (monthsMap[key].diasTrabajados || 1)));
         }
     }, [graphData1]);
 
@@ -43,27 +44,28 @@ const GraficoAnual = ({ navigation }) => {
             graphData2.conseguirRangoSemanaUsuarioID.forEach((item) => {
                 const month = getMonth(item.timestamp.split(' ')[0]);
                 if (monthsMap[month] !== undefined) {
-                    monthsMap[month] += item.horas_trabajadas;
+                    monthsMap[month].totalHoras += item.horas_trabajadas;
+                    monthsMap[month].diasTrabajados++;
                 }
             });
-            setData2(Object.keys(monthsMap).map(key => monthsMap[key]));
+            setData2(Object.keys(monthsMap).map(key => monthsMap[key].totalHoras / (monthsMap[key].diasTrabajados || 1)));
         }
     }, [graphData2]);
 
     const initializeMonths = () => {
         return {
-            Enero: 0,
-            Febrero: 0,
-            Marzo: 0,
-            Abril: 0,
-            Mayo: 0,
-            Junio: 0,
-            Julio: 0,
-            Agosto: 0,
-            Septiembre: 0,
-            Octubre: 0,
-            Noviembre: 0,
-            Diciembre: 0,
+            Enero: { totalHoras: 0, diasTrabajados: 0 },
+            Febrero: { totalHoras: 0, diasTrabajados: 0 },
+            Marzo: { totalHoras: 0, diasTrabajados: 0 },
+            Abril: { totalHoras: 0, diasTrabajados: 0 },
+            Mayo: { totalHoras: 0, diasTrabajados: 0 },
+            Junio: { totalHoras: 0, diasTrabajados: 0 },
+            Julio: { totalHoras: 0, diasTrabajados: 0 },
+            Agosto: { totalHoras: 0, diasTrabajados: 0 },
+            Septiembre: { totalHoras: 0, diasTrabajados: 0 },
+            Octubre: { totalHoras: 0, diasTrabajados: 0 },
+            Noviembre: { totalHoras: 0, diasTrabajados: 0 },
+            Diciembre: { totalHoras: 0, diasTrabajados: 0 },
         };
     };
 
