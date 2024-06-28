@@ -18,6 +18,8 @@ export const CONSEGUIR_RANGO_SEMANA = gql`
             timestamp
             tipo_marca
             horas_trabajadas
+            modificado
+            nota
         }
     }
 `
@@ -35,6 +37,7 @@ export const CONSEGUIR_SEMANA_USUARIO_ID = gql`
 export const CONSEGUIR_RANGO_SEMANA_USUARIO_ID = gql`
     query($idUser: Float!,$rangoFechaInicio: String!, $rangoFechaFinal: String!){
         conseguirRangoSemanaUsuarioID(idUser:$idUser, rangoFechaInicio:$rangoFechaInicio, rangoFechaFinal:$rangoFechaFinal){
+            id
             timestamp
             tipo_marca
             horas_trabajadas

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import Loading from "./Loading";
 import { CONSEGUIR_SEMANA_USUARIO_ID, CONSEGUIR_RANGO_SEMANA_USUARIO_ID } from "../graphql/query/marcaje";
@@ -8,6 +8,7 @@ import moment from "moment-timezone";
 import DateRangeInput from "../components/button/DateRangeInput";
 import ButtonRangoFechas from "../components/button/ButtonRangoFechas";
 import { useToast } from "react-native-toast-notifications";
+import stylesUpdate from "../components/style/stylesUpdate";
 
 const Update = ({ route, navigation }) => {
     const { userId } = route.params;
@@ -25,7 +26,7 @@ const Update = ({ route, navigation }) => {
         const week = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes'];
         const daysMap = {};
         week.forEach(day => {
-            daysMap[day] = { entrada: '', salida: '', horasTrabajadas: 0 };
+            daysMap[day] = { entrada: '', salida: '', horasTrabajadas: 0, entradaId: -1, salidaId: -1 };
         });
         return daysMap;
     };
@@ -46,9 +47,11 @@ const Update = ({ route, navigation }) => {
                 if (daysMap[day] !== undefined) {
                     if (item.tipo_marca === 'entrada') {
                         daysMap[day].entrada = item.timestamp.split(' ')[1];
+                        daysMap[day].entradaId = item.id;
                     } else if (item.tipo_marca === 'salida') {
-                        daysMap[day].salida = item.timestamp.split(' ')[1]; 
+                        daysMap[day].salida = item.timestamp.split(' ')[1];
                         daysMap[day].horasTrabajadas = item.horas_trabajadas;
+                        daysMap[day].salidaId = item.id;
                     }
                 }
             });
@@ -68,9 +71,11 @@ const Update = ({ route, navigation }) => {
                 if (daysMap[day] !== undefined) {
                     if (item.tipo_marca === 'entrada') {
                         daysMap[day].entrada = item.timestamp.split(' ')[1];
+                        daysMap[day].entradaId = item.id;
                     } else if (item.tipo_marca === 'salida') {
                         daysMap[day].salida = item.timestamp.split(' ')[1];
                         daysMap[day].horasTrabajadas = item.horas_trabajadas;
+                        daysMap[day].salidaId = item.id;
                     }
                 }
             });
@@ -98,55 +103,60 @@ const Update = ({ route, navigation }) => {
         }
     };
 
+    const navigateToModificadorAdmin = (day, time, tipoMarca, id) => {
+        const dayOfWeekMap = {
+            "Lunes": 1,
+            "Martes": 2,
+            "Miércoles": 3,
+            "Jueves": 4,
+            "Viernes": 5
+        };
+        const dayOfWeek = dayOfWeekMap[day];
+        const fecha = moment(fechaInicio, 'DD-MM-YYYY').day(dayOfWeek).format('DD-MM-YYYY');
+        const timestamp = `${fecha} ${time || '00:00:00'}`;
+        const marcajeId = id || -1;
+        navigation.navigate('Modificador Admin', {
+            idUser: userId,
+            timestamp,
+            tipoMarca,
+            id: marcajeId
+        });
+    };
+
     if (loading || rangoFechasLoading) return <Loading />;
     if (error || rangoFechasError) return <Text>Error: {error?.message || rangoFechasError?.message}</Text>;
 
     return (
-        <View style={styles.container}>
+        <View style={stylesUpdate.container}>
             <DateRangeInput onDateRangeChange={handleDateRangeChange} />
             
-            <View style={styles.headerRow}>
-                <Text style={styles.headerCell}>Día</Text>
-                <Text style={styles.headerCell}>Entrada</Text>
-                <Text style={styles.headerCell}>Salida</Text>
-                <Text style={styles.headerCell}>Horas de Trabajo</Text>
+            <View style={stylesUpdate.headerRow}>
+                <Text style={stylesUpdate.headerCell}>Día</Text>
+                <Text style={stylesUpdate.headerCell}>Entrada</Text>
+                <Text style={stylesUpdate.headerCell}>Salida</Text>
+                <Text style={stylesUpdate.headerCell}>Horas de Trabajo</Text>
             </View>
             {marcajes.map((marcaje, index) => (
-                <View key={index} style={styles.row}>
-                    <Text style={styles.cell}>{marcaje.day}</Text>
-                    <Text style={styles.cell}>{marcaje.entrada}</Text>
-                    <Text style={styles.cell}>{marcaje.salida}</Text>
-                    <Text style={styles.cell}>{marcaje.horasTrabajadas.toFixed(2)}</Text>
+                <View key={index} style={stylesUpdate.row}>
+                    <Text style={stylesUpdate.cell}>{marcaje.day}</Text>
+                    <TouchableOpacity
+                        style={stylesUpdate.cell}
+                        onPress={() => navigateToModificadorAdmin(marcaje.day, marcaje.entrada, 'entrada', marcaje.entradaId)}
+                    >
+                        <Text>{marcaje.entrada || '---'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={stylesUpdate.cell}
+                        onPress={() => navigateToModificadorAdmin(marcaje.day, marcaje.salida, 'salida', marcaje.salidaId)}
+                    >
+                        <Text>{marcaje.salida || '---'}</Text>
+                    </TouchableOpacity>
+                    <Text style={stylesUpdate.cell}>{marcaje.horasTrabajadas.toFixed(2)}</Text>
                 </View>
             ))}
             <ButtonRangoFechas onPress={handleRangoFechas} />
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: 5,
-    },
-    headerRow: {
-        flexDirection: 'row',
-        padding: 10,
-        backgroundColor: '#ddd'
-    },
-    row: {
-        flexDirection: 'row',
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-    },
-    headerCell: {
-        flex: 1,
-        fontWeight: 'bold'
-    },
-    cell: {
-        flex: 1,
-    }
-});
 
 export default Update;

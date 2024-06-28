@@ -83,6 +83,10 @@ const Register = ({navigation}) =>{
             toast.show("La contraseña debe tener al menos 6 caracteres", { type: "danger" });
             return false;
         }
+        if(contrasenna != verficaContrasenna){
+            toast.show("Las contraseñas no coinciden", { type: "danger" });
+            return
+        }
         if (emailError !== '') {
             toast.show(emailError, { type: "danger" });
             return false;

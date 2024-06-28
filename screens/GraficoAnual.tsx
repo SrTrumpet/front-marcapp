@@ -135,12 +135,12 @@ const GraficoAnual = ({ navigation }) => {
                                 {
                                     data: data1.length ? data1 : Array(12).fill(0),
                                     color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Color para usuario 1
-                                    strokeWidth: 2, // optional
+                                    strokeWidth: 2, 
                                 },
                                 {
                                     data: data2.length ? data2 : Array(12).fill(0),
                                     color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Color para usuario 2
-                                    strokeWidth: 2, // optional
+                                    strokeWidth: 2, 
                                 },
                             ],
                         }}

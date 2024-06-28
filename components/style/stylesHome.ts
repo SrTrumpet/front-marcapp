@@ -16,9 +16,7 @@ const stylesHome = StyleSheet.create({
 
     containerButtonActualizar:{
         marginTop: 10
-    },
-
-
+    }
 });
 
 export default stylesHome;

@@ -14,6 +14,8 @@ import Loading from "./Loading";
 import ButtonGenerarGrafico from "../components/button/ButtonGenerarGrafico";
 import DateRangeInput from "../components/button/DateRangeInput";
 
+import { useToast } from "react-native-toast-notifications";
+
 const Graficos = ({ navigation }) => {
     const [userId1, setUserId1] = useState("");
     const [userId2, setUserId2] = useState("");
@@ -23,6 +25,7 @@ const Graficos = ({ navigation }) => {
     const [data2, setData2] = useState([]);
     const [fetchData1, { loading: loading1, data: graphData1 }] = useLazyQuery(CONSEGUIR_RANGO_SEMANA_USUARIO_ID, { client: clientMarcaje });
     const [fetchData2, { loading: loading2, data: graphData2 }] = useLazyQuery(CONSEGUIR_RANGO_SEMANA_USUARIO_ID, { client: clientMarcaje });
+    const toast = useToast();
 
     useEffect(() => {
         if (graphData1 && graphData1.conseguirRangoSemanaUsuarioID) {
@@ -73,6 +76,15 @@ const Graficos = ({ navigation }) => {
     };
 
     const handleGenerateGraph = () => {
+        const startDate = moment(fechaInicio, 'DD-MM-YYYY');
+        const endDate = moment(fechaFinal, 'DD-MM-YYYY');
+        const differencia = endDate.diff(startDate, 'days');
+
+        if (differencia > 7) {
+            toast.show("El rango de fechas no puede ser mayor a una semana", { type: "danger" });
+            return;
+        } 
+
         const parsedUserId1 = parseFloat(userId1);
         const parsedUserId2 = parseFloat(userId2);
 

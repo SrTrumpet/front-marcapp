@@ -1,27 +1,21 @@
 //REACT
 import React, {useState,useEffect} from "react";
 import { View, Text, TextInput, Alert } from "react-native";
-
 //STYLES
 import styles from "../components/style/styles";
 import stylesHome from "../components/style/stylesHome";
 import stylesPerfil from "../components/style/strylePerfil";
-
 //BOTONES
 import ButtonCambiarInfo from "../components/button/ButtonCambiarInfo";
-
 //QUERYS Y GRAPHQL
 import { useMutation, useQuery } from "@apollo/client";
 import { ACTUALIZAR_DATOS } from "../graphql/query/users";
 import { OBTENER_INFO } from "../graphql/query/auth";
 import { clientUsuarios } from "../graphql/ApolloClienteContext";
-
 //SCREENS
 import Loading from "./Loading";
 
-
 const Perfil = ({navigation}) =>{
-
     const [nombre, setNombre]  = useState('');
     const [contrasenna, setContrasenna] = useState('');
     const [actualizarDatos,{loading, data,error}] = useMutation(ACTUALIZAR_DATOS, {client:clientUsuarios});

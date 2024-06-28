@@ -61,7 +61,7 @@ const Home = ({navigation}) =>{
 
     const handleCerrarSesion = async() =>{
         await SecureStore.deleteItemAsync('userToken');
-        toast.show("Se cerró la sesion",{type:"success"});
+        //toast.show("Se cerró la sesion",{type:"success"});
         navigation.reset({
             index: 0,
             routes: [{ name: 'Login' }],
@@ -86,7 +86,7 @@ const Home = ({navigation}) =>{
             const distancia = getDistanceFromLatLonInM(-29.982261, -71.348828, latitude, longitude);
 
             if (distancia > RADIO_PERMITIDO) {
-                toast.show("Debe estar dentro de 100 metros del centro para marcar la hora.",{type:"danger"});
+                toast.show("Debe estar dentro de 500 metros del centro para marcar la hora.",{type:"danger"});
                 return;
             }
 

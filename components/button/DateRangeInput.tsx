@@ -31,7 +31,7 @@ const DateRangeInput = ({ onDateRangeChange }) => {
     };
 
     return (
-        <View>
+        <View style={styles.container}>
             <TouchableOpacity onPress={showStartDatepicker} style={styles.input}>
                 <Text>{`Dia Inicio: ${startDate.toLocaleDateString()}`}</Text>
             </TouchableOpacity>
@@ -63,6 +63,11 @@ const DateRangeInput = ({ onDateRangeChange }) => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 15
+    },
     input: {
         marginTop: 20,
         height: 40,
@@ -75,7 +80,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     viewButton: {
-        marginTop: 30
+        marginTop: 30,
     }
 });
 

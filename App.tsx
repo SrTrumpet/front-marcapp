@@ -13,6 +13,7 @@ import GraficoAnual from './screens/GraficoAnual';
 import {ApolloClientsContext, clientUsuarios, clientMarcaje } from './graphql/ApolloClienteContext';
 import PerfilAdmin from './screens/PerfilAdmin';
 import { ToastProvider } from 'react-native-toast-notifications'
+import ModificadorAdmin from './screens/ModificadorAdmin';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ export default function App() {
             <Stack.Screen name="Rango Semana" component={VerRangoSemana}/>
             <Stack.Screen name="Graficos" component={Graficos}/>
             <Stack.Screen name="Grafico Anual" component={GraficoAnual}/>
+            <Stack.Screen name="Modificador Admin" component={ModificadorAdmin}/>
           </Stack.Navigator>
         </NavigationContainer>
       </ToastProvider>
