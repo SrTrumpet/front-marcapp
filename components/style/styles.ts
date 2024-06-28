@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     },
 
     containerVerSemana:{
-        marginTop: 200
+        marginTop: 170
     },
 
     contenedorBotonesMarcaje: {
@@ -103,7 +103,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-    }
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginBottom: 10,
+        alignSelf: 'flex-start',
+        marginLeft: '16%',
+        marginRight: '10%',
+        textAlign: 'center'
+    },
 });
 
 export default styles;

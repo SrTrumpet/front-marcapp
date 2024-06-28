@@ -1,32 +1,26 @@
 import { View, Text,Alert} from "react-native";
 import { useEffect } from "react";
-
 //GPS
 import * as Location from 'expo-location';
-
 //Botones de la pagina
 import ButtonMarcarEntrada from "../components/button/ButtonMarcarEntrada";
 import ButtonMarcarSalida from "../components/button/ButtonMarcarSalida";
 import ButtonCerrarSesion from "../components/button/ButtonCerrarSesion";
 import ButtonCambiarInfo from "../components/button/ButtonCambiarInfo";
 import ButtonVerSemana from "../components/button/ButtonVerSemana";
-
 //Estilos
 import * as SecureStore from 'expo-secure-store';
 import stylesHome from "../components/style/stylesHome";
 import styles from "../components/style/styles";
 import Loading from "./Loading";
-
 //GraphQL
 import { MARCAR_HORA } from "../graphql/mutations/horario";
 import { OBTENER_INFO } from "../graphql/query/auth";
 import { clientMarcaje, clientUsuarios } from '../graphql/ApolloClienteContext';
 import { useMutation, useQuery} from '@apollo/client';
-
 //LOGICA
 import { getDistanceFromLatLonInM } from "../utils/geolocalizacion/locationUtils";
-const RADIO_PERMITIDO = 100;
-
+const RADIO_PERMITIDO = 200;
 //NOTIFICACIONES
 import { useToast } from "react-native-toast-notifications";
 
@@ -89,7 +83,6 @@ const Home = ({navigation}) =>{
 
             let location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest });
             const { latitude, longitude } = location.coords;
-
             const distancia = getDistanceFromLatLonInM(-29.982261, -71.348828, latitude, longitude);
 
             if (distancia > RADIO_PERMITIDO) {

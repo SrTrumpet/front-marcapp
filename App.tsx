@@ -10,16 +10,11 @@ import Update from './screens/Update';
 import VerRangoSemana from './screens/VerRangoSemana';
 import Graficos from './screens/Graficos';
 import GraficoAnual from './screens/GraficoAnual';
-//import { setContext } from '@apollo/client/link/context';
-//import { getToken } from './utils/tokenStorage';
-//import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, split } from '@apollo/client';
 import {ApolloClientsContext, clientUsuarios, clientMarcaje } from './graphql/ApolloClienteContext';
 import PerfilAdmin from './screens/PerfilAdmin';
 import { ToastProvider } from 'react-native-toast-notifications'
 
-
 const Stack = createNativeStackNavigator();
-
 
 export default function App() {
   return (

@@ -5,13 +5,11 @@ import styles from './../components/style/styles';
 import ButtonGradient from './../ButtonGradient';
 import Loading from "./Loading";
 import * as SecureStore from 'expo-secure-store';
-
-//Mutaciones y Queries
+//GRAPHQL
 import { CONSEGUIR_ROL, VERIFICAR_TOKEN } from "../graphql/query/auth";
 import { INICIO_SESION } from '../graphql/mutations/auth';
 import { useMutation, useQuery} from '@apollo/client';
 import { clientUsuarios } from '../graphql/ApolloClienteContext';
-
 //NOTIFICACIONES
 import { useToast } from "react-native-toast-notifications";
 
@@ -19,10 +17,10 @@ const Login = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
     const {data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN, { client: clientUsuarios });
     const {data: infoUsuario} = useQuery(CONSEGUIR_ROL, {client: clientUsuarios});
     const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION, { client: clientUsuarios});
-
     const toast = useToast();
 
     useEffect(() => {
@@ -54,6 +52,12 @@ const Login = ({ navigation }) => {
     }, [verifyData, verifyError, infoUsuario]);
 
     const handleLogin = async () => {
+        if (!validarTexto()) {
+            return;
+        }
+        if (!validarCorreo){
+            return
+        }
         await clientUsuarios.resetStore();
         try {
             const result = await login({
@@ -62,9 +66,7 @@ const Login = ({ navigation }) => {
                     password
                 }
             });
-            console.log('Login success:', result.data.login.token);
             await SecureStore.setItemAsync('userToken', result.data.login.token);
-
             const roleResult = await clientUsuarios.query({
                 query: CONSEGUIR_ROL,
                 fetchPolicy: 'network-only'  
@@ -81,8 +83,37 @@ const Login = ({ navigation }) => {
                 navigation.replace("Home");
             }
         } catch (e) {
-            toast.show(e.nessage,{type:"danger"});
+            toast.show(e.message,{type:"danger"});
         }
+    };
+
+    const validarCorreo = (email) => {
+        if (!email.includes('@')) {
+            setEmailError('El correo electrónico debe contener un "@"');
+            return false;
+        } else if (!email.includes('.')) {
+            setEmailError('El correo electrónico debe contener un dominio, como ".com"');
+            return false;
+        } else {
+            setEmailError('');
+            return true;
+        }
+    };
+
+    const validarTexto = () => {
+        if (email === '') {
+            toast.show("Por favor, ingresa un correo electrónico", { type: "danger" });
+            return false;
+        }
+        if (password === '') {
+            toast.show("Por favor, ingresa una contraseña", { type: "danger" });
+            return false;
+        }
+        if (emailError !== '') {
+            toast.show(emailError, { type: "danger" });
+            return false;
+        }
+        return true;
     };
 
     if (verifyLoading || loginLoading) return <Loading />;
@@ -95,8 +126,11 @@ const Login = ({ navigation }) => {
             <TextInput style = {styles.textInput}
                 placeholder='jhon@gmail.com'
                 onChangeText={setEmail}
+                onEndEditing={() => validarCorreo(email)}
                 value={email}
+                keyboardType="email-address"
             />
+            {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
             <TextInput 
                 style = {styles.textInput}

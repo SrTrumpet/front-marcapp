@@ -7,6 +7,7 @@ import { clientMarcaje } from '../graphql/ApolloClienteContext';
 import moment from "moment-timezone";
 import DateRangeInput from "../components/button/DateRangeInput";
 import ButtonRangoFechas from "../components/button/ButtonRangoFechas";
+import { useToast } from "react-native-toast-notifications";
 
 const Update = ({ route, navigation }) => {
     const { userId } = route.params;
@@ -18,6 +19,7 @@ const Update = ({ route, navigation }) => {
     const [marcajes, setMarcajes] = useState([]);
     const [fechaInicio, setStartDate] = useState('');
     const [fechaFinal, setEndDate] = useState('');
+    const toast = useToast();
 
     const initializeWeekDays = () => {
         const week = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes'];
@@ -85,7 +87,15 @@ const Update = ({ route, navigation }) => {
     };
 
     const handleRangoFechas = () => {
-        conseguirRangoFechas({ variables: { idUser: userId, rangoFechaInicio: fechaInicio, rangoFechaFinal: fechaFinal } });
+        const startDate = moment(fechaInicio, 'DD-MM-YYYY');
+        const endDate = moment(fechaFinal, 'DD-MM-YYYY');
+        const differencia = endDate.diff(startDate, 'days');
+
+        if (differencia > 7) {
+            toast.show("El rango de fechas no puede ser mayor a una semana", { type: "danger" });
+        } else {
+            conseguirRangoFechas({ variables: { idUser: userId, rangoFechaInicio: fechaInicio, rangoFechaFinal: fechaFinal } });
+        }
     };
 
     if (loading || rangoFechasLoading) return <Loading />;
