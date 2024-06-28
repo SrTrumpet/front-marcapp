@@ -91,7 +91,7 @@ const Login = ({ navigation }) => {
         if (!correo.includes('@')) {
             setEmailError('El correo electrónico debe contener un "@"');
             return false;
-        } else if (!correo.includes('.com')) {
+        } else if (!correo.includes('.com') && !correo.includes('.ucn.cl')) {
             setEmailError('El correo electrónico debe contener un dominio, como ".com"');
             return false;
         } else {
