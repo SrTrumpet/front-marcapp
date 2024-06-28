@@ -86,7 +86,7 @@ const Home = ({navigation}) =>{
             const distancia = getDistanceFromLatLonInM(-29.982261, -71.348828, latitude, longitude);
 
             if (distancia > RADIO_PERMITIDO) {
-                toast.show("Debe estar dentro de 500 metros del centro para marcar la hora.",{type:"danger"});
+                toast.show("Debe estar dentro de 500 metros de la empresa para marcar la hora.",{type:"danger"});
                 return;
             }
 

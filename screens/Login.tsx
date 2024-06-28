@@ -15,19 +15,19 @@ import { useToast } from "react-native-toast-notifications";
 
 const Login = ({ navigation }) => {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const {data: verifyData, loading: verifyLoading, error: verifyError } = useQuery(VERIFICAR_TOKEN, { client: clientUsuarios });
+    const [correo, confiCorreo] = useState('');
+    const [contrasenna, setPassword] = useState('');
+    const [correoError, setEmailError] = useState('');
+    const {data: verificarInfo, loading: verificarCargando, error: verificarError } = useQuery(VERIFICAR_TOKEN, { client: clientUsuarios });
     const {data: infoUsuario} = useQuery(CONSEGUIR_ROL, {client: clientUsuarios});
-    const [login, { loading: loginLoading, error: loginError }] = useMutation(INICIO_SESION, { client: clientUsuarios});
+    const [login, { loading: sesionCargando, error: loginError }] = useMutation(INICIO_SESION, { client: clientUsuarios});
     const toast = useToast();
 
     useEffect(() => {
         const handleData = async () => {
             try {
                 await clientUsuarios.resetStore();
-                if (verifyData.verificarInicioSesionVesionDos) {
+                if (verificarInfo.verificarInicioSesionVesionDos) {
                     await clientUsuarios.resetStore();
                     if(infoUsuario?.conseguirRol){
                         navigation.reset({
@@ -49,7 +49,7 @@ const Login = ({ navigation }) => {
             }
         };
         handleData();
-    }, [verifyData, verifyError, infoUsuario]);
+    }, [verificarInfo, verificarError, infoUsuario]);
 
     const handleLogin = async () => {
         if (!validarTexto()) {
@@ -62,8 +62,8 @@ const Login = ({ navigation }) => {
         try {
             const result = await login({
                 variables: {
-                    email,
-                    password
+                    email: correo,
+                    password:contrasenna
                 }
             });
             await SecureStore.setItemAsync('userToken', result.data.login.token);
@@ -87,11 +87,11 @@ const Login = ({ navigation }) => {
         }
     };
 
-    const validarCorreo = (email) => {
-        if (!email.includes('@')) {
+    const validarCorreo = (correo) => {
+        if (!correo.includes('@')) {
             setEmailError('El correo electrónico debe contener un "@"');
             return false;
-        } else if (!email.includes('.')) {
+        } else if (!correo.includes('.com')) {
             setEmailError('El correo electrónico debe contener un dominio, como ".com"');
             return false;
         } else {
@@ -101,22 +101,22 @@ const Login = ({ navigation }) => {
     };
 
     const validarTexto = () => {
-        if (email === '') {
+        if (correo === '') {
             toast.show("Por favor, ingresa un correo electrónico", { type: "danger" });
             return false;
         }
-        if (password === '') {
+        if (contrasenna === '') {
             toast.show("Por favor, ingresa una contraseña", { type: "danger" });
             return false;
         }
-        if (emailError !== '') {
-            toast.show(emailError, { type: "danger" });
+        if (correoError !== '') {
+            toast.show(correoError, { type: "danger" });
             return false;
         }
         return true;
     };
 
-    if (verifyLoading || loginLoading) return <Loading />;
+    if (verificarCargando || sesionCargando) return <Loading />;
 
     return(
         <View style = {styles.container}>
@@ -125,19 +125,19 @@ const Login = ({ navigation }) => {
 
             <TextInput style = {styles.textInput}
                 placeholder='jhon@gmail.com'
-                onChangeText={setEmail}
-                onEndEditing={() => validarCorreo(email)}
-                value={email}
+                onChangeText={confiCorreo}
+                onEndEditing={() => validarCorreo(correo)}
+                value={correo}
                 keyboardType="email-address"
             />
-            {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+            {correoError ? <Text style={styles.errorText}>{correoError}</Text> : null}
 
             <TextInput 
                 style = {styles.textInput}
                 placeholder='Contraseña'
                 secureTextEntry = {true}
                 onChangeText={setPassword}
-                value={password}
+                value={contrasenna}
             />
 
             <Text style={styles.containerOlvido}>Olvidé mi contraseña. 
